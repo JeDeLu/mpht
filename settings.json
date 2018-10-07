@@ -1,0 +1,11 @@
+{
+	
+	"hostname": 'suntos6',
+	"server_nb_cpu": %server_nb_cpu%,
+	"server_nb_memory": %server_nb_memory%,
+	"app_root_path": '/root/AMDOCS',
+	"app_webserv_path": '/root/AMDOCS/webserv',
+	"webserv_port": 1211,
+	"webserv_ip": '0.0.0.0'
+
+}

@@ -1,0 +1,98 @@
+<html>
+
+	<head>
+
+    <title>ATOM</title>
+    <meta name="description" content="Automated Tool Optimizing Maintenance" />
+		<link rel="stylesheet" href="css/MPHTWeb.css" />
+    <link rel="shortcut icon" href="images/MPHT16x16.png" type="image/png" />
+		<script src="js/jquery-3.3.1.min.js" type="text/javascript"></script>
+
+	</head>
+
+
+	<body onload="firstLoad();">
+    
+
+
+		<div id="app_container" class="app_container">
+			
+      <div id="app_banner" class="app_banner">
+        <div id="app_banner_hostname_info" class="banner_section">
+          <div id="app_banner_hostname_img" class="banner_section_img"><img src="images/host.png" width="20px" height="20px"></div>
+          <div id="app_banner_hostname" class="banner_section_text">localhost</div>
+        </div>    
+        <div id="app_banner_package_info" class="banner_section">
+          <div id="app_banner_package_img" class="banner_section_img"><img src="images/package.png" width="20px" height="20px"></div>
+          <div id="app_banner_package" class="banner_section_text"></div>
+        </div>    
+      </div>
+      
+			<div id="app_nav_bar" class="app_nav_bar">
+
+				<ul>
+          <li id="nav_bar_bt_dash" onclick="showDash(this) ;" class="app_nav_bar_button">
+            <div style="display: inline-block;">
+              <div style="display:block; float: left;"><img src="images/dashboard.png" width="25" height="25"></div>
+              <div style="display:block; float: left; padding-top: 3px; padding-left: 10px; font-size: 18px;">Dashboard</div>
+            </div>
+          </li>
+          <li id="nav_bar_bt_job" onclick="showJobs(this) ;" class="app_nav_bar_button">
+            <div style="display: inline-block;">
+              <div style="display:block; float: left;"><img src="images/job.png" width="25" height="25"></div>
+              <div style="display:block; float: left; padding-top: 3px; padding-left: 10px; font-size: 18px;">Job</div>
+            </div>
+          </li>
+          <li id="nav_bar_bt_package" onclick="showPackages(this) ;" class="app_nav_bar_button">
+            <div style="display: inline-block">
+              <div style="display:block; float: left;"><img src="images/package.png" width="25px" height="25px" /></div>
+              <div style="display:block; float: left; padding-top: 3px; padding-left: 10px; font-size: 18px;">Package</div>
+            </div>
+          </li>
+          <li id="nav_bar_bt_profile" onclick="showProfiles(this) ;" class="app_nav_bar_button">
+            <div style="display: inline-block">
+              <div style="display:block; float: left;"><img src="images/profile.png" width="25px" height="25px"/></div>
+              <div style="display:block; float: left; padding-top: 3px; padding-left: 10px; font-size: 18px;">Profile</div>
+            </div>
+          </li>
+          <li id="nav_bar_bt_restore" onclick="showBackup(this) ;" class="app_nav_bar_button">
+            <div style="display: inline-block;">
+              <div style="display:block; float: left;"><img src="images/restore.png" width="25" height="25"></div>
+              <div style="display:block; float: left; padding-top: 3px; padding-left: 10px; font-size: 18px;">Restore</div>
+            </div>
+          </li>
+          <li id="nav_bar_bt_settings" onclick="showSettings(this) ;" class="app_nav_bar_button">
+            <div style="display: inline-block">
+              <div style="display:block; float: left;"><img src="images/settings.png" width="25px" height="25px" /></div>
+              <div style="display:block; float: left; padding-top: 3px; padding-left: 10px; font-size: 18px;">Settings</div>
+            </div>
+					<li id="nav_bar_bt_template" onclick="showTemplates(this) ;" class="app_nav_bar_button">
+            <div style="display: inline-block">
+              <div style="display:block; float: left;"><img src="images/template.png" width="25px" height="25px" /></div>
+              <div style="display:block; float: left; padding-top: 3px; padding-left: 10px; font-size: 18px;">Template</div>
+            </div>
+          </li>
+          <li id="nav_bar_bt_description" class="app_nav_bar_description">
+            <div style="display: inline-block">
+              <div id="menu_description" class="obj_menu_description"></div>
+            </div>
+          </li>
+				</ul>
+
+			</div>
+			
+      <div id="app_interactive" class="app_interactive"></div>
+			<div id="app_disp" class="app_disp"></div>
+
+		</div>
+
+	</body>
+  
+  <script src="js/index.js"></script>
+  <script src="js/interface_profile.js" type="text/javascript"></script>
+  <script src="js/interface_job.js" type="text/javascript"></script>
+  <script src="js/interface_template.js" type="text/javascript"></script>
+  <script src="js/interface_package.js" type="text/javascript"></script>
+  <script src="js/interface_restore.js" type="text/javascript"></script>
+  <script src="js/interface_settings.js" type="text/javascript"></script>
+</html>
