@@ -1,0 +1,172 @@
+#!/bin/bash
+#
+# NAME="check_patch_update"
+# ARG_NUM="2"
+# DESC="check the level of patch installed on the machine"
+#
+
+source modules.d/patch_manager_module.sh
+
+function check_patch_update {
+	
+	local job_name="$2"
+  local job_id="$3"
+  local errata="$4"
+  local rpm_pack_name="$5"
+	local job_id_print=`if [[ ${job_id} -lt 10 ]]; then echo "0${job_id}" ; else echo ${job_id} ; fi`
+	local msg_test_success="${file_name} exists in system tree"
+	local msg_test_failure="${file_name} missing in system tree"
+  local msg_backup_success="backup ${file_name} successfull"
+	local msg_backup_failure="backup ${file_name} failed"
+	local msg_restore_success="restore ${file_name} successfull"
+	local msg_restore_failure="restore ${file_name} failed"
+	local msg_update_success="add ${file_name} successfull to system tree"
+	local msg_update_failure="add ${file_name} failed to system tree"
+
+	case $1 in
+		test)
+		
+			# set errata rpm info
+			local rpm_pack_name=`patch_manager_normalize_rpm_name "${rpm_pack_name}"`
+			local rpm_name=`patch_manager_get_rpm_name "${rpm_pack_name}"`
+			local rpm_version=`patch_manager_get_rpm_version "${rpm_pack_name}"`
+			local rpm_release=`patch_manager_get_rpm_release "${rpm_pack_name}"`
+			local rpm_arch=`patch_manager_get_rpm_arch "${rpm_pack_name}"`
+			
+			# set the csv string for output
+			# prepare csv report system information
+			local host_name=`hostname`
+			local num_cpu_core=`grep -c "processor" /proc/cpuinfo`
+			local cpu_family_name=`grep -i "model name" /proc/cpuinfo | uniq | awk -F\: '{print $2}' | sed 's/^\ //'`
+			local total_memory=`grep -i "MemTotal" /proc/meminfo | awk '{print $2$3}'`
+			local uptime=`uptime | awk -F\, '{print $1}' | sed 's/^ //'`
+			local max_inf_scan=12
+			local cur_inf_scan=0
+			local csv_output_str="${host_name},${num_cpu_core},${cpu_family_name},${total_memory},${uptime}"
+			
+			for IP in `ip addr show | grep -w "inet" | sort | awk '{print $2}'`; do
+				local IPaddr=`echo ${IP} | awk -F\/ '{print $1}'`
+				local IPnet=`echo ${IP} | awk -F\/ '{print $2}'`
+				csv_output_str="${csv_output_str},${IPaddr},/${IPnet}"
+				((cur_inf_scan=${cur_inf_scan}+1))
+			done
+
+			if [[ ${cur_inf_scan} -lt ${max_inf_scan} ]]; then
+				local empty_ip=''
+				local empty_net=''
+				
+				while [[ ${cur_inf_scan} -lt ${max_inf_scan} ]]; do
+					csv_output_str="${csv_output_str},${empty_ip},${empty_net}"
+					((cur_inf_scan=${cur_inf_scan}+1))
+				done
+			fi
+
+			csv_output_str="${csv_output_str},${errata},${rpm_pack_name}"
+			
+			if [[ `patch_manager_is_rpm_installed "${rpm_pack_name}"` -eq 1 ]]; then
+				
+				csv_output_str="${csv_output_str},${rpm_pack_name},INSTALLED"
+				echo "${csv_output_str}" >> "${global_output_patch_file}"
+				echo "1|[`prt_stdout_green PATCHED`] errata patch name `prt_stdout_bold ${rpm_pack_name}`"
+				
+			elif [[ `patch_manager_get_rpm_installed_by_rpm_name "${rpm_name}"` != "" ]]; then
+				
+				# set info of patch already installed
+				local rpm_pack_installed=`patch_manager_get_rpm_installed_by_rpm_name "${rpm_name}"`
+				local rpm_found_version=`patch_manager_get_rpm_version "${rpm_pack_installed}"`
+				local rpm_found_release=`patch_manager_get_rpm_release "${rpm_pack_installed}"`
+				local rpm_found_arch=`patch_manager_get_rpm_arch "${rpm_pack_installed}"`
+				
+				if [[ "${rpm_arch}" == "${rpm_found_arch}" ]]; then
+				
+					rpm_nb_sub_version=`echo "${rpm_version}" | awk -F\. '{print NF}'`
+					rpm_nb_sub_release=`echo "${rpm_release}" | awk -F\. '{print NF}'`
+					
+					for sub_version_pos in `seq 1 ${rpm_nb_sub_version}`; do
+						
+						rpm_sub_version=`echo "${rpm_version}" | awk -F\. -v pos=${sub_version_pos} '{print $pos}'`
+						rpm_found_sub_version=`echo "${rpm_found_version}" | awk -F\. -v pos=${sub_version_pos} '{print $pos}'`
+							
+						# sub version is bigger so the installed version is newer
+						if [[ "${rpm_sub_version}" -gt "${rpm_found_sub_version}" ]]; then
+					
+							csv_output_str="${csv_output_str},${rpm_pack_installed},TO BE PATCHED"
+							echo "${csv_output_str}" >> "${global_output_patch_file}"
+							echo "1|[`prt_stdout_yellow \"TO BE PATCHED\"`] errata patch name `prt_stdout_bold ${rpm_pack_name}`"
+							break
+					
+						# sub version is lower so the installed version is older
+						elif [[ "${rpm_sub_version}" -lt "${rpm_found_sub_version}" ]]; then
+					
+							csv_output_str="${csv_output_str},${rpm_pack_installed},OBSOLETE"
+							echo "${csv_output_str}" >> "${global_output_patch_file}"
+							echo "1|[`prt_stdout_red OBSELETE`] errata patch name `prt_stdout_bold ${rpm_pack_name}`"
+							break
+							
+						elif [[ "${sub_version_pos}" -eq "${rpm_nb_sub_version}" ]] && [[ "${rpm_sub_version}" -eq "${rpm_found_sub_version}" ]] ; then
+						
+							for sub_release_pos in `seq 1 ${rpm_nb_sub_release}`; do
+							
+								rpm_sub_release=`echo "${rpm_release}" | awk -F\. -v pos=${sub_release_pos} '{print $pos}'`
+								rpm_found_sub_release=`echo "${rpm_found_release}" | awk -F\. -v pos=${sub_release_pos} '{print $pos}'`
+								
+								# sub version is bigger so the installed version is newer
+								if [[ "${rpm_sub_release}" -gt "${rpm_found_sub_release}" ]]; then
+					
+									csv_output_str="${csv_output_str},${rpm_pack_installed},TO BE PATCHED"
+									echo "${csv_output_str}" >> "${global_output_patch_file}"
+									echo "1|[`prt_stdout_yellow \"TO BE PATCHED\"`] errata patch name `prt_stdout_bold ${rpm_pack_name}`"
+									break
+					
+								# sub version is lower so the installed version is older
+								elif [[ "${rpm_sub_release}" -lt "${rpm_found_sub_release}" ]]; then
+									
+									csv_output_str="${csv_output_str},${rpm_pack_installed},OBSOLETE"
+									echo "${csv_output_str}" >> "${global_output_patch_file}"
+									echo "1|[`prt_stdout_red OBSELETE`] errata patch name `prt_stdout_bold ${rpm_pack_name}`"
+									break
+							
+								fi
+							
+							done
+						
+						fi
+							
+					done
+					
+				else
+				
+					csv_output_str="${csv_output_str},,NOT INSTALLED"
+					echo "${csv_output_str}" >> "${global_output_patch_file}"
+					echo "0|[`prt_stdout_magenta \"NOT INSTALLED\"`] errata package name `prt_stdout_bold ${rpm_pack_name}` for arch: ${rpm_arch}"
+				
+				fi
+				
+			else
+				
+				csv_output_str="${csv_output_str},,NOT INSTALLED"
+				echo "${csv_output_str}" >> "${global_output_patch_file}"
+				echo "0|[`prt_stdout_magenta \"NOT INSTALLED\"`] errata package name `prt_stdout_bold ${rpm_pack_name}` for arch: any"
+				
+			fi
+		
+		;;
+
+		backup)
+
+		# no backup for this job				
+		;;
+
+		restore)
+
+		# no restore for this job
+		;;
+
+		update)
+
+		# no update for this job
+		;;
+
+		esac
+
+}

@@ -1,0 +1,2 @@
+[X] jobname=mybew,template=linux_common/create_dir|/home/toto
+[X] jobname=myuse,template=linux_common/create_user|toto|10000|10000
