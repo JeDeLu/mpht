@@ -280,7 +280,7 @@ const HTTPserver = http.createServer( ( req, res ) => {
       
       }) ;
       
-    } else if ( urlData['pathname'] === '/get_template_search_value' )
+    } else if ( urlData['pathname'] === '/get_template_search_value') {
       
       var searchValue = urlData['query']['search_value'] ;
       
