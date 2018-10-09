@@ -57,10 +57,23 @@ function jobHTMLList(js_obj) {
   
   // update the app_disp section with new html content
   $("#app_disp").html(HTML_OUTPUT) ;
-  //$("#app_disp").css("overflow", "scroll") ;
   
 }
+
+function clickJobButtonList() {
   
+  // update the content with the list of jobs.
+  $.get("/get_job_all", function(data) {
+        
+    // get this object which is a list of json objects
+    var js_obj = JSON.parse(data) ;
+    
+    //
+    jobHTMLList(js_obj) ;
+        
+  }) ;
+}
+
 function showJobs(obj) {
       
   // update the button class after click on it
@@ -114,21 +127,8 @@ function showJobs(obj) {
   showJobTemplateRealmDDMenu() ;
   
   //flush the content of the app_disp
-  $("#app_disp").html('') ;
-}
-
-function clickJobButtonList() {
-  
-  // update the content with the list of jobs.
-  $.get("/get_job_all", function(data) {
-        
-    // get this object which is a list of json objects
-    var js_obj = JSON.parse(data) ;
-    
-    //
-    jobHTMLList(js_obj) ;
-        
-  }) ;
+  // $("#app_disp").html('') ;
+  clickJobButtonList() ;
 }
 
 function clickJobButtonSearch() {

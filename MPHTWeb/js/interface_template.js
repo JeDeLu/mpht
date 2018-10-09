@@ -52,7 +52,6 @@ function templateHTMLList(js_obj) {
   
   // update html code with new content
   $("#app_disp").html(HTML_OUTPUT) ;
-  $("#app_disp").css("overflow", "scroll") ;
   
   
 }
@@ -176,8 +175,8 @@ function showTemplates(obj) {
   $("#app_interactive").html(HTML_OUTPUT) ;
   
   // update the profiles list
-  $("#app_disp").html('') ;
-      
+  // $("#app_disp").html('') ;
+  clickTemplateButtonList() ; 
 }
 
 

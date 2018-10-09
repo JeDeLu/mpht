@@ -72,7 +72,7 @@ li.app_nav_bar_description {
         height: 100% ;
         box-shadow: 0 0 0 1px #A9A9A9 ;
         position: fixed ;
-        top: 5% ;
+        top: 5.5% ;
         width: 15% ;
 
 }
@@ -399,7 +399,7 @@ li.app_nav_bar_description {
     padding: 10px ;
     border: thin solid #F0F0F0 ;
     border-radius: 5px ;
-    overflow: scroll ;
+    //overflow: scroll ;
 }
 
 .obj_disp_run {

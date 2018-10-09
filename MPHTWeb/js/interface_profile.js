@@ -35,7 +35,7 @@ function profileHTMLList(js_obj) {
   
   // update the app_disp zone with new html content
   $("#app_disp").html(HTML_OUTPUT) ;
-  $("#app_disp").css("overflow", "scroll") ;
+  //$("#app_disp").css("overflow", "scroll") ;
   
 }
 

@@ -8,9 +8,15 @@ const package = require('./js/modules.d/package') ;
 const job = require('./js/modules.d/job') ;
 const template = require('./js/modules.d/template') ;
 const path = require('path') ;
+
+
+
+
+
+
 const addr = '0.0.0.0' ;
 const port = '1112' ;
-const serverRoot = '/root/AMDOCS/MPHTWeb/' ;
+const serverRoot = '/root/github.com/MPHTWeb/' ;
 
 const HTTPserver = http.createServer( ( req, res ) => {
 
