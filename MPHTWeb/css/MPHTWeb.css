@@ -88,6 +88,7 @@ li.app_nav_bar_description {
     display: inline-block ;
     overflow: hidden ;
     position: fixed ;
+    top: 0 ;
     width: 100% ;
 }
 
