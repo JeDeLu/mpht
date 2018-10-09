@@ -53,14 +53,6 @@ const HTTPserver = http.createServer( ( req, res ) => {
     var deleteProfileRe = /^\/delete_existing_profile\?name=\w{1,}/ ;
     var getProfileSearchRe = /^\/get_profile_search_value\?value=\w{1,}/ ;
     
-    // TEMPLATE REGEXP DEFINITION
-    var getTemplateAllRe = /^\/get_template_all$/ ;
-    var getTemplateRealmRe = /^\/get_template_realm$/ ;
-    var getTemplateNameByRealmRe = /^\/get_template_name_by_realm\?name=\w{1,}/ ;
-    var getTemplateObj = /^\/get_template_obj\?realm_name=\w{1,}&template_name=\w{1,}/ ;
-    var getTemplateContentRe = /^\/get_template_content\?realm=\w{1,}&template=\w{1,}/ ;
-    var getTemplateSearchRe = /^\/get_template_search_value\?value=\w{1,}/ ;
-    
     var mphtRunRe = /^\/mpht_run\?method=\w{1,}&profile_name=\w{1,}/ ;
     
     // IMAGE REGEXP DEFINITION
@@ -78,7 +70,7 @@ const HTTPserver = http.createServer( ( req, res ) => {
     
     
     console.log(req.url) ;
-    if( getTemplateRealmRe.test(req.url) ) {
+    if( urlData['pathname'] === '/get_template_realm') {
 
       template.list_all_realm_object( function( HTTPResponse) {
         
@@ -87,10 +79,9 @@ const HTTPserver = http.createServer( ( req, res ) => {
         
       }) ; 
       
-    } else if( getTemplateNameByRealmRe.test(req.url) ) {
+    } else if( urlData['pathname'] === '/get_template_name_by_realm' ) {
       
-      nameRe = /\?name=\w{1,}/ ;
-      name = req.url.match(nameRe)[0].split('=')[1] ;
+      var realmName = urlData['query']['realm_name'] ;
       
       template.list_by_realm_object(name, function( HTTPResponse) {
         
@@ -99,13 +90,10 @@ const HTTPserver = http.createServer( ( req, res ) => {
         
       }) ; 
       
-    } else if( getTemplateObj.test(req.url)) {
+    } else if( urlData['pathname'] === '/get_template_obj') {
       
-      realmNameRe = /\?realm_name=\w{1,}/ ;
-      templateNameRe = /&template_name=\w{1,}/ ;
-      
-      realmName = req.url.match(realmNameRe)[0].split('=')[1] ;
-      templateName = req.url.match(templateNameRe)[0].split('=')[1] ;
+      realmName = urlData['query']['realm_name'] ;
+      templateName = urlData['query']['template_name'] ;
       
       template.list_object_by_template_object(realmName, templateName, function( HTTPResponse) {
         
@@ -114,15 +102,12 @@ const HTTPserver = http.createServer( ( req, res ) => {
         
       }) ;
       
-    } else if ( getTemplateContentRe.test(req.url)) {
+    } else if ( urlData['pathname'] === '/get_template_content') {
       
-      var realmNameRe = /\?realm=\w{1,}/ ;
-      var templateNameRe = /&template=\w{1,}/ ;
+      var realmName = urlData['query']['realm_name'] ;
+      var templateName = urlData['query']['template_name'] ;
       
-      var realm_name = req.url.match(realmNameRe)[0].split('=')[1] ;
-      var template_name = req.url.match(templateNameRe)[0].split('=')[1] ;
-      
-      template.disp_content_by_template(realm_name, template_name, function( HTTPResponse) {
+      template.disp_content_by_template(realmName, templateName, function( HTTPResponse) {
         
         res.write(JSON.stringify(HTTPResponse)) ;
         res.end() ;
@@ -286,7 +271,7 @@ const HTTPserver = http.createServer( ( req, res ) => {
       
       }) ;
 
-    } else if (getTemplateAllRe.test(req.url)) {
+    } else if ( urlData['pathname'] === '/get_template_all') {
     
       template.list_all_object( function( HTTPResponse) {
         
@@ -295,12 +280,11 @@ const HTTPserver = http.createServer( ( req, res ) => {
       
       }) ;
       
-    } else if ( getTemplateSearchRe.test(req.url)) {
+    } else if ( urlData['pathname'] === '/get_template_search_value' )
       
-      var valueRe = /\?value=\w{1,}/ ;
-      var value = req.url.match(valueRe)[0].split('=')[1] ;
+      var searchValue = urlData['query']['search_value'] ;
       
-      template.template_list_all_obj_by_value( value, function( HTTPResponse) {
+      template.template_list_all_obj_by_value( searchValue, function( HTTPResponse) {
         
         res.write( JSON.stringify(HTTPResponse)) ;
         res.end() ;
