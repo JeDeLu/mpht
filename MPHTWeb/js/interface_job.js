@@ -57,7 +57,7 @@ function jobHTMLList(js_obj) {
   
   // update the app_disp section with new html content
   $("#app_disp").html(HTML_OUTPUT) ;
-  $("#app_disp").css("overflow", "scroll") ;
+  //$("#app_disp").css("overflow", "scroll") ;
   
 }
   
