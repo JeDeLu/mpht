@@ -84,6 +84,8 @@ li.app_nav_bar_description {
     border-bottom-color: #A9A9A9 ;
     display: inline-block ;
     overflow: hidden ;
+    position: fixed ;
+    width: 100% ;
 }
 
 .banner_section {
