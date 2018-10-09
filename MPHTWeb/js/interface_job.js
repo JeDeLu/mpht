@@ -247,7 +247,7 @@ function showJobProfileNameDDMenu() {
 
 function showJobTemplateNameDDMenu(realm_name) {
   
-  $.get('/get_template_name_by_realm?name=' + realm_name, function(data) {
+  $.get('/get_template_name_by_realm?realm_name=' + realm_name, function(data) {
     
     var js_obj = JSON.parse(data) ;
     var HTML_OUTPUT = 'Template name: <select id="jobTemplateSelectName" onchange="loadJobTemplateArgs() ;">' ;
