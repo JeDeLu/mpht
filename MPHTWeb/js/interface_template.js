@@ -37,6 +37,7 @@ function templateHTMLList(js_obj) {
       
     HTML_OUTPUT = HTML_OUTPUT + '\
     <div id="obj_details_cmd_'+i+'" class="obj_details_cmd">\
+    <button id="obj_button_copy_'+i+'" class="obj_details_button" style="display: none ;" onclick="clickTemplateButtonCopy(\''+template_realm+'\', \''+template_name+'\', \''+i+'\') ;">COPY</button>\
     <button id="obj_button_edit_'+i+'" class="obj_details_button" style="display: none ;" onclick="clickTemplateButtonEdit(\''+i+'\') ;">EDIT</button>\
     <button id="obj_button_save_'+i+'" class="obj_details_button" style="display: none ;" onclick="clickTemplateButtonSave(\''+template_realm+'\', \''+template_name+'\', \''+i+'\') ;">SAVE</button>\
     <button id="obj_button_view_'+i+'" class="obj_details_button" onclick="clickTemplateButtonView(\''+template_realm+'\', \''+template_name+'\', \''+i+'\') ;">VIEW</button>\
@@ -64,7 +65,7 @@ function clickTemplateButtonView(realm_name, template_name, displayId) {
   var objBtnEdit = 'obj_button_edit_' + displayId ;
   var objBtnSave = 'obj_button_save_' + displayId ;
   var displayBoxStatus = $('#' + displayBoxId).css("display") ;
-  var url = '/get_template_content?realm=' + realm_name + '&template=' + template_name ;
+  var url = '/get_template_content?realm_name=' + realm_name + '&template_name=' + template_name ;
   
   if( displayBoxStatus === "none" ) {
 
@@ -183,7 +184,7 @@ function showTemplates(obj) {
 function clickTemplateButtonSearch() { 
   
   var search_value = document.getElementById("obj_search_field").value ;
-  var url = '/get_template_search_value?value=' + search_value ;
+  var url = '/get_template_search_value?search_value=' + search_value ;
  
   if( search_value !== '' ) {
 
@@ -236,5 +237,16 @@ function clickTemplateButtonSave(templateRealm, templateName, objectId) {
     
   }) ;
   
+  
+}
+
+
+function clickTemplateButtonCopy(templateRealm, templateName, objectId) {
+  
+  var url = '/copy_template?template_realm=' + templateRealm + '&template_name=' + template_name ;
+  
+  $.get(url, function( data) {
+    
+  }) ;
   
 }
