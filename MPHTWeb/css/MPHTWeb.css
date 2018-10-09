@@ -71,6 +71,9 @@ li.app_nav_bar_description {
         border-right-color: #A9A9A9 ;
         height: 100% ;
         box-shadow: 0 0 0 1px #A9A9A9 ;
+        position: fixed ;
+        top: 5% ;
+        width: 15% ;
 
 }
 
