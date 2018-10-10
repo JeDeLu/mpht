@@ -2,21 +2,18 @@
 const http = require('http') ;
 const fs = require('fs') ;
 const url = require('url') ;
+const path = require('path') ;
 const querystring = require('querystring') ;
 const profile = require('./js/modules.d/profile') ;
 const package = require('./js/modules.d/package') ;
 const job = require('./js/modules.d/job') ;
 const template = require('./js/modules.d/template') ;
-const path = require('path') ;
 
-
-
-
-
-
-const addr = '0.0.0.0' ;
-const port = '1112' ;
-const serverRoot = '/root/github.com/MPHTWeb/' ;
+const configFile = "../settings.json" ;
+var js_obj = JSON.parse(fs.readFileSync(configFile, 'utf-8').toString()) ;
+const addr = js_obj['app_webserv_ip'] ;
+const port = js_obj['app_webserv_port'] ;
+const serverRoot = js_obj['app_webserv_path'] ;
 
 const HTTPserver = http.createServer( ( req, res ) => {
 
@@ -39,16 +36,6 @@ const HTTPserver = http.createServer( ( req, res ) => {
     
     // JOB REGEXP DEFINITION 
     var getJobSearchRe = /^\/get_job_search_value\?value=\w{1,}/ ;
-    
-    /*
-     * PACKAGE REGEXP DEFINITION 
-     */ 
-    var getPackageAllRe = /^\/get_package_all$/ ;
-    var activatePackageRe = /^\/activate_package\?package_name=[\w\.\-]{1,}/ ;
-    var createPackageRe = /^\/create_package\?package_name=[\w\-\.]{1,}/ ;
-    var deployPackageRe = /^\/deploy_package\?package_name=[\w\.\-]{1,}/ ;
-    var removePackageRe = /^\/remove_package\?package_name=[\w\.\-]{1,}/ ;
-    var undeployPackageRe = /^\/undeploy_package\?package_name=[\w\.\-]{1,}/ ;
     
     // PACKAGE REGEXP catching value from URL 
     var packageNameRe = /\?package_name=[\w\-\.]{1,}/ ;
@@ -85,11 +72,17 @@ const HTTPserver = http.createServer( ( req, res ) => {
         
       }) ; 
       
+    } else if ( urlData['pathname'] === '/list_settings') {
+      
+      var HTTPResponse = fs.readFileSync(configFile, 'utf-8').toString() ;
+      res.write(HTTPResponse) ;
+      res.end() ;
+      
     } else if( urlData['pathname'] === '/get_template_name_by_realm' ) {
       
       var realmName = urlData['query']['realm_name'] ;
       
-      template.list_by_realm_object(name, function( HTTPResponse) {
+      template.list_by_realm_object(realmName, function( HTTPResponse) {
         
         res.write( JSON.stringify(HTTPResponse)) ;
         res.end() ;
@@ -119,6 +112,19 @@ const HTTPserver = http.createServer( ( req, res ) => {
         res.end() ;
          
       }) ;
+      
+    } else if ( urlData['pathname'] === '/copy_template') {
+      
+      var realmName = urlData['query']['template_realm'] ;
+      var templateOrigName = urlData['query']['template_orig_name'] ;
+      var templateDestName = urlData['query']['template_dest_name'] ;
+      
+      template.template_copy(realmName, templateOrigName, templateDestName, function( HTTPResponse) {
+        
+        res.write(JSON.stringify(HTTPResponse)) ;
+        res.end() ;
+        
+      }) ; 
       
     } else if( deleteProfileRe.test(req.url)) {
       
@@ -165,9 +171,9 @@ const HTTPserver = http.createServer( ( req, res ) => {
         
       }) ;      
     
-    } else if( activatePackageRe.test(req.url)) {
+    } else if( urlData['pathname'] === '/activate_package') {
       
-      var package_name = req.url.match(packageNameRe)[0].split('=')[1] ;
+      var package_name = urlData['query']['package_name'] ;
       
       package.package_activate( package_name, function( HTTPResponse) {
       
@@ -176,9 +182,9 @@ const HTTPserver = http.createServer( ( req, res ) => {
         
       }) ;
     
-    } else if( createPackageRe.test(req.url)) {
+    } else if( urlData['pathname'] === '/create_package') {
     
-      var package_name = req.url.match(packageNameRe)[0].split('=')[1] ;
+      var package_name = urlData['query']['package_name'] ;
       
       package.package_create( package_name, function(HTTPResponse) {
         
@@ -187,9 +193,10 @@ const HTTPserver = http.createServer( ( req, res ) => {
         
       }) ;
 
-    } else if( deployPackageRe.test(req.url)) {
+    } else if( urlData['pathname'] === '/deploy_package') {
     
-      var package_name = req.url.match(packageNameRe)[0].split('=')[1] ;
+      var package_name = urlData['query']['package_name'] ;
+      
       package.package_deploy(package_name, function( HTTPResponse) {
         
         res.write( JSON.stringify( HTTPResponse)) ;
@@ -197,7 +204,7 @@ const HTTPserver = http.createServer( ( req, res ) => {
         
       }) ;
     
-    } else if( getPackageAllRe.test(req.url)) {
+    } else if( urlData['pathname'] === '/get_package_all') {
       
       package.package_get_all_obj( function( HTTPResponse) {
       
@@ -206,9 +213,9 @@ const HTTPserver = http.createServer( ( req, res ) => {
         
       }) ;
     
-    } else if( undeployPackageRe.test(req.url)) {
+    } else if( urlData['pathname'] === '/undeploy_package') {
       
-      var package_name = req.url.match(packageNameRe)[0].split('=')[1] ;
+      var package_name = urlData['query']['package_name'] ;
       
       package.package_undeploy( package_name, function( HTTPResponse) {
       
@@ -217,9 +224,9 @@ const HTTPserver = http.createServer( ( req, res ) => {
         
       }) ;
       
-    } else if( removePackageRe.test(req.url)) {
+    } else if( urlData['pathname'] === '/remove_package') {
       
-      var package_name = req.url.match(packageNameRe)[0].split('=')[1] ;
+      var package_name = urlData['query']['package_name'] ;
       
       package.package_remove( package_name, function( HTTPResponse) {
       

@@ -202,8 +202,6 @@ function template_list_all_obj_by_value( value, callback) {
     template_file_list.forEach( function(template) { 
       
       if( targetRe.test( template)) {
-        console.log(value) ; 
-        console.log(template) ;
         current_template_path = path.join(current_section_path, template) ;
         
         file_content = fs.readFileSync(current_template_path, 'utf-8') ;
@@ -284,11 +282,11 @@ function template_update_file( template_realm, template_name, template_data, cal
   
   template_lines.forEach( function(template_line) {
     
-    template_line = template_line.replace('<code>', '') ;
-    template_line = template_line.replace('</code>', '') ;
-    template_line = template_line.replace('&amp;', '&') ;
-    template_line = template_line.replace('&gt;', '>') ;
-    template_line = template_line.replace('&lt;', '<') ;
+    template_line = template_line.replace(/<code>/g, '') ;
+    template_line = template_line.replace(/<\/code>/g, '') ;
+    template_line = template_line.replace(/&amp;/g, '&') ;
+    template_line = template_line.replace(/&gt;/g, '>') ;
+    template_line = template_line.replace(/&lt;/g, '<') ;
     
     fs.appendFileSync(tempTemplatePath, template_line + '\n') ;
     
@@ -306,6 +304,33 @@ function template_update_file( template_realm, template_name, template_data, cal
   }) ;
 }
 
+function template_copy( template_realm, template_orig_name, template_dest_name, callback) {
+  
+  var template_path = "../latest/template.d/" ; 
+  var template_orig_path = path.join(template_path, template_realm, template_orig_name) ;
+  var template_dest_path = path.join(template_path, template_realm, template_dest_name) ;
+  
+  try {
+  
+    var file_content = fs.readFileSync(current_template_path, 'utf-8') ;      
+    var lines = file_content.toString().split('\n') ;
+  
+    lines.forEach( function(line) {
+    
+      var newline = line.replace(template_orig_name, template_dest_name) ;
+      fs.appendFileSync(template_dest_path, newline+'\n') ;
+      
+    }) ;
+  
+    return callback({"res_code": 1, "res_description": "success", "res_data": []}) ;
+  
+  } catch(err) {
+    
+    return callback({"res_code": 0, "res_description": err, "res_data": []}) ;
+  }
+  
+}
+
 module.exports.disp_content_by_template = disp_content_by_template ;
 module.exports.list_object_by_template_object = list_object_by_template_object ;
 module.exports.list_all_realm_object = list_all_realm_object ;
@@ -314,3 +339,4 @@ module.exports.list_all_object = list_all_object ;
 module.exports.template_create_new = template_create_new ;
 module.exports.template_list_all_obj_by_value = template_list_all_obj_by_value ;
 module.exports.template_update_file = template_update_file ;
+module.exports.template_copy = template_copy ;

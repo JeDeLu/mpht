@@ -35,7 +35,20 @@ function profileHTMLList(js_obj) {
   
   // update the app_disp zone with new html content
   $("#app_disp").html(HTML_OUTPUT) ;
-  //$("#app_disp").css("overflow", "scroll") ;
+  
+  
+}
+
+function clickProfileButtonList() {
+  
+  $.get("/get_profile_all", function(data) {
+    
+    js_obj = JSON.parse(data) ;
+    
+    // display the full list of profile
+    profileHTMLList(js_obj) ;
+
+	});
   
 }
 
@@ -90,34 +103,17 @@ function showProfiles(obj) {
   </div>\
   </div>\
   \
-  </div>\
-  \
-  <!--\
-  <div id="obj_search_zone" class="obj_search_zone">\
-  <input type="text" size="75" id="obj_search_field" class="obj_search_field" placeholder="search a profile by name" />\
-  <button id="obj_search_button" class="obj_button_search" onclick="clickProfileButtonSearch() ;">SEARCH</button>\
-  </div>\
-  -->';
+  </div>';
   
   $("#app_interactive").html(HTML_OUTPUT) ;
+  
+  clickProfileButtonList() ;
   
   // update the profiles list
   $("#app_disp").html('') ;
 
 }
 
-function clickProfileButtonList() {
-  
-  $.get("/get_profile_all", function(data) {
-    
-    js_obj = JSON.parse(data) ;
-    
-    // display the full list of profile
-    profileHTMLList(js_obj) ;
-
-	});
-  
-}
 
 function mpht_run(method, profile_name, objectId) {
   

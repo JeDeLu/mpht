@@ -37,6 +37,7 @@ function templateHTMLList(js_obj) {
       
     HTML_OUTPUT = HTML_OUTPUT + '\
     <div id="obj_details_cmd_'+i+'" class="obj_details_cmd">\
+    <div id="obj_attr_entry_'+i+'" class="obj_input" style="display: none ;"><input id="obj_entry_value_'+i+'" size="35" type="text" placeholder="name the copy or rename this template here" /></div>\
     <button id="obj_button_copy_'+i+'" class="obj_details_button" style="display: none ;" onclick="clickTemplateButtonCopy(\''+template_realm+'\', \''+template_name+'\', \''+i+'\') ;">COPY</button>\
     <button id="obj_button_edit_'+i+'" class="obj_details_button" style="display: none ;" onclick="clickTemplateButtonEdit(\''+i+'\') ;">EDIT</button>\
     <button id="obj_button_save_'+i+'" class="obj_details_button" style="display: none ;" onclick="clickTemplateButtonSave(\''+template_realm+'\', \''+template_name+'\', \''+i+'\') ;">SAVE</button>\
@@ -52,8 +53,6 @@ function templateHTMLList(js_obj) {
   
   // update html code with new content
   $("#app_disp").html(HTML_OUTPUT) ;
-  
-  
 }
 
 function clickTemplateButtonView(realm_name, template_name, displayId) {
@@ -63,6 +62,7 @@ function clickTemplateButtonView(realm_name, template_name, displayId) {
   var objBtnEdit = 'obj_button_edit_' + displayId ;
   var objBtnSave = 'obj_button_save_' + displayId ;
   var objBtnCopy = 'obj_button_copy_' + displayId ;
+  var objBtnInput = 'obj_attr_entry_' + displayId ;
   var displayBoxStatus = $('#' + displayBoxId).css("display") ;
   var url = '/get_template_content?realm_name=' + realm_name + '&template_name=' + template_name ;
   
@@ -87,6 +87,7 @@ function clickTemplateButtonView(realm_name, template_name, displayId) {
         $('#' + objBtnEdit).css("display", "block") ;
         $('#' + objBtnSave).css("display", "block") ;
         $('#' + objBtnCopy).css("display", "block") ;
+        $('#' + objBtnInput).css("display", "inline-block") ;
                 
       }
     }) ;
@@ -98,9 +99,9 @@ function clickTemplateButtonView(realm_name, template_name, displayId) {
     $('#' + objBtnEdit).css("display", "none") ;
     $('#' + objBtnSave).css("display", "none") ;
     $('#' + objBtnCopy).css("display", "none") ;
+    $('#' + objBtnInput).css("display", "none") ;
     
   }
-  
 }
 
 function clickTemplateButtonList() {
@@ -113,7 +114,6 @@ function clickTemplateButtonList() {
     templateHTMLList(js_obj) ;
         
   }) ;
-  
 }
 
 function showTemplates(obj) {
@@ -127,7 +127,7 @@ function showTemplates(obj) {
 
       $.get(url, function( data) {
    
-      var js_obj = JSON.parse( data) ;
+      var js_obj = JSON.parse(data) ;
       templateHTMLList(js_obj) ;
       }) ;
     }
@@ -181,13 +181,6 @@ function showTemplates(obj) {
   </div>\
   </div>\
   \
-  </div>\
-  \
-  <div id="obj_search_zone" class="obj_search_zone">\
-  <!--\
-  <input type="text" size="75" id="obj_search_field" class="obj_search_field" placeholder="search a template by name" />\
-  <button id="obj_search_button" class="obj_button_search" onclick="clickTemplateButtonSearch() ;">SEARCH</button>\
-  -->\
   </div>';
   
   $("#app_interactive").html(HTML_OUTPUT) ;
@@ -216,7 +209,6 @@ function clickTemplateButtonEdit(editableId) {
     $('#' + objBtnEdit).html('EDIT') ;
     
   }
-  
 }
 
 function clickTemplateButtonSave(templateRealm, templateName, objectId) {
@@ -236,16 +228,18 @@ function clickTemplateButtonSave(templateRealm, templateName, objectId) {
     js_obj = JSON.parse(data) ;
     
   }) ;
-  
-  
 }
 
 function clickTemplateButtonCopy(templateRealm, templateName, objectId) {
   
-  var url = '/copy_template?template_realm=' + templateRealm + '&template_name=' + template_name ;
+  var inputId = 'obj_entry_value_' + objectId ;
+  var template_orig_name = templateName ;
+  var template_dest_name = $("#" + inputId).val() ;
+  var url = '/copy_template?template_realm=' + templateRealm + '&template_orig_name=' + template_orig_name + '&template_dest_name=' + template_dest_name ;
   
   $.get(url, function( data) {
     
+    js_obj = JSON.parse(data) ;
+    
   }) ;
-  
 }

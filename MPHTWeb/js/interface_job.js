@@ -53,7 +53,7 @@ function jobHTMLList(js_obj) {
   
   // flush the app_disp section
   $("#app_disp").html("") ;
-  $("#app_disp").css("overflow", "visible") ;
+  //$("#app_disp").css("overflow", "visible") ;
   
   // update the app_disp section with new html content
   $("#app_disp").html(HTML_OUTPUT) ;
@@ -115,7 +115,7 @@ function showJobs(obj) {
   </div> \
   \
   <div id="job_form" class="obj_form">\
-  <div id="job_form_name" class="obj_form_field">Name: <input type="text" id="job_form_name_input"/></div>\
+  <div id="job_form_name" class="obj_form_field">Name: <input type="text" size="50" id="job_form_name_input"/></div>\
   <div id="job_form_profile_name" class="obj_form_field"></div>\
   <div id="job_form_template_realm" class="obj_form_field"></div>\
   <div id="job_form_template_name" class="obj_form_field"></div>\
