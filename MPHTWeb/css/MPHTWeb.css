@@ -260,6 +260,12 @@ li.app_nav_bar_description {
     
 }
 
+.obj_input {
+    
+    margin: 2px ;
+}
+
+
 .obj_form {
     
     display: none ;   
@@ -420,8 +426,6 @@ li.app_nav_bar_description {
     padding: 10px ;
     border: thin solid #F0F0F0 ;
     border-radius: 5px ;
-    overflow: scroll ;
-    height: 250px ;
     
 }
 
@@ -430,6 +434,31 @@ li.app_nav_bar_description {
     background-color: #FAFAFA ;
     font-size: 10px ;
     padding: 5px ;
+}
+
+.obj_settings {
+    
+    padding: 1% ;
+}
+
+.obj_settings_key {
+    
+    display: inline-block ;
+    text-align: right ;
+    padding: 1% ;
+    width: 45% ;
+    overflow: hidden ;
+}
+
+.obj_settings_value {
+    
+    display: inline-block ;
+    text-align: left ;
+    padding: 1% ;
+    background-color: #ADD8E6 ;
+    width: 45% ;
+    overflow: hidden ;
+    margin-bottom: 1% ;
 }
 
 .description_block {

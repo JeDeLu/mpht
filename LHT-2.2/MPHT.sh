@@ -28,8 +28,8 @@ declare -i global_opt_list=0
 declare -i global_opt_debug=0
 declare global_current_path=`pwd`
 declare global_exec_path=`dirname $0`
-declare global_app_path="`cd "${global_exec_path}" ; grep "app_root_path" ../settings.json | awk -F\' '{print $2}'`/latest"
-declare global_hostname=`cd "${global_exec_path}" ; grep "hostname" ../settings.json | awk -F\' '{print $2}'`
+declare global_app_path=`cd "${global_exec_path}" ; grep "app_root_path" ../settings.json | awk -F\" '{print $4}'`/latest
+declare global_hostname=`cd "${global_exec_path}" ; grep "hostname" ../settings.json | awk -F\" '{print $4}'`
 cd "${global_current_path}"
 declare global_system_version
 declare global_server_profile="${global_app_path}/server-profile"

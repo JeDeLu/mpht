@@ -4,7 +4,7 @@ exec_path=`dirname $0`
 package_name=$1
 
 # define the root directory of the app
-global_app_path="`cd ${exec_path} ; grep 'app_root_path' ../../settings.json | awk -F\' '{print $2}'`"
+global_app_path=`cd ${exec_path} ; grep 'app_root_path' ../../settings.json | awk -F\" '{print $4}'`
 
 # define the root directory of the app package
 global_app_pkg_path="${global_app_path}/package.d"

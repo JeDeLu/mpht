@@ -27,7 +27,49 @@ function showSettings(obj) {
   
   $("#app_interactive").html(HTML_OUTPUT) ;
   
-  // update the profiles list
-  $("#app_disp").html('') ;
-      
+  // update the page content with the list of the settings
+  settingsList() ;
+  
+}
+
+function settingsList() {
+  
+  var url = '/list_settings' ;
+  
+  $.get(url, function(data) {
+   
+    js_obj = JSON.parse(data) ;
+    console.log(js_obj) ;
+    
+    HTML_OUTPUT ='\
+    \
+    <div class="obj_settings">\
+    <div class="obj_settings_key"><b>hostname</b><br />hostname of the running front-end</div>\
+    <div class="obj_settings_value">' + js_obj['hostname'] + '</div>\
+    </div>\
+    \
+    <div class="obj_settings">\
+    <div class="obj_settings_key"><b>app_root_path</b><br />root path of the back-end app</div>\
+    <div class="obj_settings_value">' + js_obj['app_root_path'] + '</div>\
+    </div>\
+    \
+    <div class="obj_settings">\
+    <div class="obj_settings_key"><b>app_webserv_path</b><br />root path of the front-end web server</div>\
+    <div class="obj_settings_value">' + js_obj['app_webserv_path'] + '</div>\
+    </div>\
+    \
+    <div class="obj_settings">\
+    <div class="obj_settings_key"><b>app_webserv_ip</b><br />listening ip address of the front-end web server</div>\
+    <div class="obj_settings_value">' + js_obj['app_webserv_ip'] + '</div>\
+    </div>\
+    \
+    <div class="obj_settings">\
+    <div class="obj_settings_key"><b>app_webserv_port</b><br />opened socket value of the front-end web server</div>\
+    <div class="obj_settings_value">' + js_obj['app_webserv_port'] + '</div>\
+    </div>';
+    
+    $("#app_disp").html(HTML_OUTPUT) ;
+    
+  }) ;
+   
 }
