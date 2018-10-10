@@ -57,12 +57,40 @@ function jobHTMLList(js_obj) {
   
   // update the app_disp section with new html content
   $("#app_disp").html(HTML_OUTPUT) ;
-  $("#app_disp").css("overflow", "scroll") ;
   
 }
+
+function clickJobButtonList() {
   
+  // update the content with the list of jobs.
+  $.get("/get_job_all", function(data) {
+        
+    // get this object which is a list of json objects
+    var js_obj = JSON.parse(data) ;
+    
+    //
+    jobHTMLList(js_obj) ;
+        
+  }) ;
+}
+
 function showJobs(obj) {
+  
+  $("#obj_search_btn").bind("click", function clickJobButtonSearch() {
+  
+    var search_value = document.getElementById("obj_search_field").value ;
+    var url = '/get_job_search_value?value=' + search_value ;
+  
+    if ( search_value !== '' ) {
+    
+      $.get(url, function(data) {
       
+        var js_obj = JSON.parse(data) ;
+        jobHTMLList(js_obj) ;  
+      }) ;
+    }
+  }) ;
+  
   // update the button class after click on it
   updateNavBarButtonClass(obj) ;
   
@@ -100,10 +128,12 @@ function showJobs(obj) {
   \
   </div>\
   \
+  <!--\
   <div id="obj_search_zone" class="obj_search_zone">\
   <input type="text" size="75" id="obj_search_field" class="obj_search_field" placeholder="search a job by name" />\
   <button id="obj_search_button" class="obj_button_search" onclick="clickJobButtonSearch() ;">SEARCH</button>\
-  </div>';
+  </div>\
+  -->';
   
   $("#app_interactive").html(HTML_OUTPUT) ;
   
@@ -114,37 +144,10 @@ function showJobs(obj) {
   showJobTemplateRealmDDMenu() ;
   
   //flush the content of the app_disp
-  $("#app_disp").html('') ;
+  // $("#app_disp").html('') ;
+  clickJobButtonList() ;
 }
 
-function clickJobButtonList() {
-  
-  // update the content with the list of jobs.
-  $.get("/get_job_all", function(data) {
-        
-    // get this object which is a list of json objects
-    var js_obj = JSON.parse(data) ;
-    
-    //
-    jobHTMLList(js_obj) ;
-        
-  }) ;
-}
-
-function clickJobButtonSearch() {
-  
-  var search_value = document.getElementById("obj_search_field").value ;
-  var url = '/get_job_search_value?value=' + search_value ;
-  
-  if ( search_value !== '' ) {
-    
-    $.get(url, function(data) {
-      
-      var js_obj = JSON.parse(data) ;
-      jobHTMLList(js_obj) ;  
-    }) ;
-  }
-}
 
 function clickJobButtonRem(job_name, job_profile) {
   

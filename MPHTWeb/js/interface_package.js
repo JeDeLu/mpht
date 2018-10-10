@@ -68,12 +68,30 @@ function packageHTMLList(js_obj) {
   
   // update the app_disp zone with new html content
   $("#app_disp").html(HTML_OUTPUT) ;
-  $("#app_disp").css("overflow", "scroll") ;
+  //$("#app_disp").css("overflow", "scroll") ;
     
+}
+
+function clickPackageButtonList() {
+  
+  var url = '/get_package_all' ;
+  
+  $.get(url, function( data) { 
+  
+    js_obj = JSON.parse(data) ;
+    
+    packageHTMLList(js_obj) ;
+  
+  }) ;
+  
 }
 
 
 function showPackages(obj) {
+  
+  $("obj_search_btn").bind("click", function() {
+    
+  }) ;
       
   // update the button class after click on it
   updateNavBarButtonClass(obj) ;
@@ -119,31 +137,21 @@ function showPackages(obj) {
   \
   </div>\
   \
+  <!--\
   <div id="obj_search_zone" class="obj_search_zone">\
   <input type="text" size="75" id="obj_search_field" class="obj_search_field" placeholder="search a package by name" />\
   <button id="obj_search_button" class="obj_button_search" onclick="clickTemplateButtonSearch() ;">SEARCH</button>\
-  </div>';
+  </div>\
+  -->';
   
   $("#app_interactive").html(HTML_OUTPUT) ;
   
   // update the profiles list
-  $("#app_disp").html('') ;
+  // $("#app_disp").html('') ;
+  clickPackageButtonList() ;
       
 }
 
-function clickPackageButtonList() {
-  
-  var url = '/get_package_all' ;
-  
-  $.get(url, function( data) { 
-  
-    js_obj = JSON.parse(data) ;
-    
-    packageHTMLList(js_obj) ;
-  
-  }) ;
-  
-}
 
 function clickPackageButtonCreate() {
   

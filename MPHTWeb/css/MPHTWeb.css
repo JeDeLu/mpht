@@ -52,7 +52,7 @@ li.app_nav_bar_description {
 
 	display: grid ;
 	grid-template-columns: 15% 85% ;
-        grid-template-rows: 5% 35% 60% ;
+        grid-template-rows: 5% 30% 65% ;
 	width: 100% ;
         height: 100% ;
 	max-width: 100% ;
@@ -71,6 +71,9 @@ li.app_nav_bar_description {
         border-right-color: #A9A9A9 ;
         height: 100% ;
         box-shadow: 0 0 0 1px #A9A9A9 ;
+        position: fixed ;
+        top: 6% ;
+        width: 15% ;
 
 }
 
@@ -84,6 +87,19 @@ li.app_nav_bar_description {
     border-bottom-color: #A9A9A9 ;
     display: inline-block ;
     overflow: hidden ;
+    position: fixed ;
+    top: 0 ;
+    width: 100% ;
+}
+
+.banner_search_section {
+    
+    display: block ;
+    width: 20% ;
+    overflow: hidden ;
+    float: right ;
+    margin-top: 5px ;
+    
 }
 
 .banner_section {
@@ -386,14 +402,12 @@ li.app_nav_bar_description {
     
     display: none ;
     width: 97% ;
-    height: 350px ;
     background-color: #FFF ;
     font-size: 11px ;
     margin: 5px ;
     padding: 10px ;
     border: thin solid #F0F0F0 ;
     border-radius: 5px ;
-    overflow: scroll ;
 }
 
 .obj_disp_run {

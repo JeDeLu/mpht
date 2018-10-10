@@ -35,11 +35,28 @@ function profileHTMLList(js_obj) {
   
   // update the app_disp zone with new html content
   $("#app_disp").html(HTML_OUTPUT) ;
-  $("#app_disp").css("overflow", "scroll") ;
+  //$("#app_disp").css("overflow", "scroll") ;
   
 }
 
 function showProfiles(obj) {
+
+  $("#obj_search_btn").bind("click", function clickProfileButtonSearch() {
+  
+    var search_value = document.getElementById("obj_search_field").value ;
+  
+    if ( search_value !== '' ) {
+    
+      var url = '/get_profile_search_value?value=' + search_value ;
+    
+      $.get(url, function(data) {
+      
+        var js_obj = JSON.parse(data) ;
+        profileHTMLList(js_obj) ;
+      
+      }) ;
+    }
+  }) ;
 
   // update the button class after click on it
   updateNavBarButtonClass(obj) ;
@@ -75,35 +92,18 @@ function showProfiles(obj) {
   \
   </div>\
   \
+  <!--\
   <div id="obj_search_zone" class="obj_search_zone">\
   <input type="text" size="75" id="obj_search_field" class="obj_search_field" placeholder="search a profile by name" />\
   <button id="obj_search_button" class="obj_button_search" onclick="clickProfileButtonSearch() ;">SEARCH</button>\
-  </div>';
+  </div>\
+  -->';
   
   $("#app_interactive").html(HTML_OUTPUT) ;
   
   // update the profiles list
   $("#app_disp").html('') ;
 
-}
-
-
-function clickProfileButtonSearch() {
-  
-  var search_value = document.getElementById("obj_search_field").value ;
-  
-  if ( search_value !== '' ) {
-    
-    var url = '/get_profile_search_value?value=' + search_value ;
-    
-    $.get(url, function(data) {
-      
-      var js_obj = JSON.parse(data) ;
-      console.log(js_obj) ;
-      profileHTMLList(js_obj) ;
-      
-    }) ;
-  }
 }
 
 function clickProfileButtonList() {

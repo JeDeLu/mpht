@@ -52,11 +52,9 @@ function templateHTMLList(js_obj) {
   
   // update html code with new content
   $("#app_disp").html(HTML_OUTPUT) ;
-  $("#app_disp").css("overflow", "scroll") ;
   
   
 }
-
 
 function clickTemplateButtonView(realm_name, template_name, displayId) {
   
@@ -64,6 +62,7 @@ function clickTemplateButtonView(realm_name, template_name, displayId) {
   var objBtnView = 'obj_button_view_' + displayId ;
   var objBtnEdit = 'obj_button_edit_' + displayId ;
   var objBtnSave = 'obj_button_save_' + displayId ;
+  var objBtnCopy = 'obj_button_copy_' + displayId ;
   var displayBoxStatus = $('#' + displayBoxId).css("display") ;
   var url = '/get_template_content?realm_name=' + realm_name + '&template_name=' + template_name ;
   
@@ -87,7 +86,8 @@ function clickTemplateButtonView(realm_name, template_name, displayId) {
         $('#' + objBtnView).html('HIDE') ;
         $('#' + objBtnEdit).css("display", "block") ;
         $('#' + objBtnSave).css("display", "block") ;
-      
+        $('#' + objBtnCopy).css("display", "block") ;
+                
       }
     }) ;
   } else if( displayBoxStatus === "block" ) {
@@ -97,6 +97,7 @@ function clickTemplateButtonView(realm_name, template_name, displayId) {
     $('#' + objBtnView).html('VIEW') ;
     $('#' + objBtnEdit).css("display", "none") ;
     $('#' + objBtnSave).css("display", "none") ;
+    $('#' + objBtnCopy).css("display", "none") ;
     
   }
   
@@ -115,8 +116,22 @@ function clickTemplateButtonList() {
   
 }
 
-
 function showTemplates(obj) {
+  
+  $("#obj_search_btn").bind("click", function clickTemplateButtonSearch() { 
+  
+    var search_value = document.getElementById("obj_search_field").value ;
+    var url = '/get_template_search_value?search_value=' + search_value ;
+ 
+    if( search_value !== '' ) {
+
+      $.get(url, function( data) {
+   
+      var js_obj = JSON.parse( data) ;
+      templateHTMLList(js_obj) ;
+      }) ;
+    }
+  }) ; 
       
   // update the button class after click on it
   updateNavBarButtonClass(obj) ;
@@ -169,31 +184,16 @@ function showTemplates(obj) {
   </div>\
   \
   <div id="obj_search_zone" class="obj_search_zone">\
+  <!--\
   <input type="text" size="75" id="obj_search_field" class="obj_search_field" placeholder="search a template by name" />\
   <button id="obj_search_button" class="obj_button_search" onclick="clickTemplateButtonSearch() ;">SEARCH</button>\
+  -->\
   </div>';
   
   $("#app_interactive").html(HTML_OUTPUT) ;
   
-  // update the profiles list
-  $("#app_disp").html('') ;
-      
-}
-
-
-function clickTemplateButtonSearch() { 
-  
-  var search_value = document.getElementById("obj_search_field").value ;
-  var url = '/get_template_search_value?search_value=' + search_value ;
- 
-  if( search_value !== '' ) {
-
-    $.get(url, function( data) {
-   
-    var js_obj = JSON.parse( data) ;
-    templateHTMLList(js_obj) ;
-    }) ;
-  }
+  // update the profiles list 
+  clickTemplateButtonList() ; 
 }
 
 function clickTemplateButtonEdit(editableId) {
@@ -239,7 +239,6 @@ function clickTemplateButtonSave(templateRealm, templateName, objectId) {
   
   
 }
-
 
 function clickTemplateButtonCopy(templateRealm, templateName, objectId) {
   
