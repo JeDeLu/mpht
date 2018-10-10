@@ -75,7 +75,22 @@ function clickJobButtonList() {
 }
 
 function showJobs(obj) {
+  
+  $("#obj_search_btn").bind("click", function clickJobButtonSearch() {
+  
+    var search_value = document.getElementById("obj_search_field").value ;
+    var url = '/get_job_search_value?value=' + search_value ;
+  
+    if ( search_value !== '' ) {
+    
+      $.get(url, function(data) {
       
+        var js_obj = JSON.parse(data) ;
+        jobHTMLList(js_obj) ;  
+      }) ;
+    }
+  }) ;
+  
   // update the button class after click on it
   updateNavBarButtonClass(obj) ;
   
@@ -113,10 +128,12 @@ function showJobs(obj) {
   \
   </div>\
   \
+  <!--\
   <div id="obj_search_zone" class="obj_search_zone">\
   <input type="text" size="75" id="obj_search_field" class="obj_search_field" placeholder="search a job by name" />\
   <button id="obj_search_button" class="obj_button_search" onclick="clickJobButtonSearch() ;">SEARCH</button>\
-  </div>';
+  </div>\
+  -->';
   
   $("#app_interactive").html(HTML_OUTPUT) ;
   
@@ -131,20 +148,6 @@ function showJobs(obj) {
   clickJobButtonList() ;
 }
 
-function clickJobButtonSearch() {
-  
-  var search_value = document.getElementById("obj_search_field").value ;
-  var url = '/get_job_search_value?value=' + search_value ;
-  
-  if ( search_value !== '' ) {
-    
-    $.get(url, function(data) {
-      
-      var js_obj = JSON.parse(data) ;
-      jobHTMLList(js_obj) ;  
-    }) ;
-  }
-}
 
 function clickJobButtonRem(job_name, job_profile) {
   

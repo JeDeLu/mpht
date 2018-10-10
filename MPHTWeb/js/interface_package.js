@@ -88,6 +88,10 @@ function clickPackageButtonList() {
 
 
 function showPackages(obj) {
+  
+  $("obj_search_btn").bind("click", function() {
+    
+  }) ;
       
   // update the button class after click on it
   updateNavBarButtonClass(obj) ;
@@ -133,10 +137,12 @@ function showPackages(obj) {
   \
   </div>\
   \
+  <!--\
   <div id="obj_search_zone" class="obj_search_zone">\
   <input type="text" size="75" id="obj_search_field" class="obj_search_field" placeholder="search a package by name" />\
   <button id="obj_search_button" class="obj_button_search" onclick="clickTemplateButtonSearch() ;">SEARCH</button>\
-  </div>';
+  </div>\
+  -->';
   
   $("#app_interactive").html(HTML_OUTPUT) ;
   
