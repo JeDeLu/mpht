@@ -1,0 +1,116 @@
+#!/bin/bash
+#
+# NAME="set_kernel_value"
+# ARG_NUM="2"
+# DESC="DEFINE OR REDEFINE A VALUE FOR SYSCTL PARAM"
+# ARG#1="the sysctl param"
+# ARG#2="the value for the sysctl param"
+
+source modules.d/file_module.sh
+
+function set_kernel_value {
+	
+	local job_name="$2"
+        local job_id="$3"
+        local sysctl_param="$4"
+        local sysctl_desired_val="$5"
+	local job_id_print=`if [[ ${job_id} -lt 10 ]]; then echo "0${job_id}" ; else echo ${job_id} ; fi`
+	local msg_test_success="${file_name} exists in system tree"
+	local msg_test_failure="${file_name} missing in system tree"
+        local msg_backup_success="backup ${file_name} successfull"
+	local msg_backup_failure="backup ${file_name} failed"
+	local msg_restore_success="restore ${file_name} successfull"
+	local msg_restore_failure="restore ${file_name} failed"
+	local msg_update_success="add ${file_name} successfull to system tree"
+	local msg_update_failure="add ${file_name} failed to system tree"
+        local config_file=/etc/sysctl.conf
+        current_val=`sysctl "$sysctl_param" | awk -F\= '{print $2}' | sed 's/ //'`
+
+	case $1 in
+		test)
+
+			if [[ "${current_val}" == "${sysctl_desired_val}"  ]]; then
+				
+				prt_func_res ${job_id_print} ${job_name} "TEST" "OK" "${msg_test_success}"
+
+			else
+				
+				prt_func_res ${job_id_print} ${job_name} "TEST" "NOK" "${msg_test_failure}"
+
+			fi
+		;;
+
+		backup)
+
+                        cmd_line="sysctl ${sysctl_param}=${sysctl_desired_value};"
+                        
+                        if [[ `sed -nr "/^ *${sysctl_param} *=.*/p" ${config_file} | wc -l` -eq 0 ]] ; then
+                            
+                            cmd_line=`echo $cmd_line sed -r -i \"/${sysctl_param}/d\" ${config_file}`
+                        else
+
+                            cmd_line=`echo $cmd_line sed -r -i \"/${sysctl_param}/s/=.*/= ${current_val}/\" ${config_file}`
+                        fi
+
+			if [[ `update_metadata "${job_id}" "cmd" "${cmd_line}"` -eq 1 ]]; then
+
+                            prt_func_res ${job_id_print} ${job_name} "BACKUP" "OK" "${msg_backup_success}"
+			else
+				
+                            prt_func_res ${job_id_print} ${job_name} "BACKUP" "NOK" "${msg_backup_failure}"
+			fi			
+		;;
+
+		restore)
+
+			if [[ `grep "^cmd\[${job_id}\]=" ${global_restore_metadata} | wc -l` -eq 1 ]]; then
+			
+				local restore_cmd=`grep "^cmd\[${job_id}\]=" ${global_restore_metadata}| awk -F]= '{print $2}'`
+				eval ${restore_cmd}
+
+				prt_func_res ${job_id_print} ${job_name} "RESTORE" "OK" "${msg_restore_success}"
+
+			else
+				
+				prt_func_res ${job_id_print} ${job_name} "RESTORE" "NOK" "${msg_restore_failure}"
+
+			fi		
+		;;
+
+		update)
+
+                    sysctl -w "${sysctl_param}=${sysctl_desired_val}"
+			
+                    if [[ $? -eq 0 ]]; then
+
+                        if [[ `sed -nr "/^ *${sysctl_param} *=.*/p" ${config_file} | wc -l` -eq 0 ]]; then
+
+                            echo "${sysctl_parm} = ${sysctl_desired_val}" >> /etc/sysctl.conf
+
+                        else
+
+                            sed -r -i "/${sysctl_param}/s/=.*/= ${sysctl_desired_val}/" "${config_file}"
+
+                        fi
+
+                            prt_func_res ${job_id_print} ${job_name} "UPDATE" "OK" "${msg_update_success}"
+
+                    else
+				
+			prt_func_res ${job_id_print} ${job_name} "UPDATE" "NOK" "${msg_update_failure}"
+
+                    fi
+		;;
+
+		*)
+		;;
+
+	esac
+
+}
+
+
+
+
+
+

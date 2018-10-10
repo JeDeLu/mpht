@@ -1,0 +1,136 @@
+#!/bin/bash
+#
+# NAME="set_file_owner"
+# ARG_NUM="2"
+# ARG#1="file name to update"
+# ARG#2="owner name to set the file"
+# DESC="set owner to a file"
+# 
+
+source modules.d/file_module.sh
+
+function set_file_owner {
+	
+	local job_name="$2"
+	local job_id="$3"
+	local file_name="$4"
+	local owner_wanted="$5"
+  local job_id_print=`if [[ ${job_id} -lt 10 ]]; then echo "0${job_id}" ; else echo ${job_id} ;  fi`
+	local msg_test_success="${file_name} owner ${owner_wanted} correctly set"
+	local msg_test_failure="${file_name} owner ${owner_wanted} not correctly set"
+  local msg_backup_success="backup ${file_name} owner success"
+	local msg_backup_failure="backup ${file_name} owner failed"
+	local msg_restore_success="restore ${file_name} owner sucess"
+	local msg_restore_failure="restore ${file_name} owner failed"
+	local msg_update_success="update ${file_name} owner ${owner_wanted} successfull"
+	local msg_update_failure="update ${file_name} owner ${owner_wanted} failed"
+	local file_exist=0
+	
+	if [[ `file_exist "file" "${file_name}"` -eq 1 ]]; then
+
+		# identify the real file avoid working on symbolic link
+		file_name=`file_source_get "${file_name}"`
+
+		local owner=`file_owner_get ${file_name} | awk -F\| '{print $2}'`
+
+		file_exist=1
+
+	fi
+
+		case $1 in
+			test)
+
+				if [[ ${file_exist} -eq 1 ]]; then
+
+					if [[ ${owner} == ${owner_wanted} ]]; then
+
+						prt_func_res ${job_id_print} ${job_name} "TEST" "OK" "${msg_test_success}"
+
+					else
+				
+						prt_func_res ${job_id_print} ${job_name} "TEST" "NOK" "${msg_test_failure}"
+
+					fi
+
+				else
+
+					prt_func_res ${job_id_print} ${job_name} "TEST" "NOK" "${msg_test_failure}"
+
+				fi
+		;;
+
+			backup)
+			
+				if [[ ${file_exist} -eq 1 ]]; then
+
+					local cmd_line="chown ${owner} ${file_name}" 
+					if [[ `metadata_write_restore_cmd "${job_id}" "${cmd_line}"` -eq 1 ]]; then 			
+
+						prt_func_res ${job_id_print} ${job_name} "BACKUP" "OK" "${msg_backup_success}"
+
+					else
+				
+						prt_func_res ${job_id_print} ${job_name} "BACKUP" "NOK" "${msg_backup_failure}"
+
+					fi
+			
+				else
+
+					prt_func_res ${job_id_print} ${job_name} "BACKUP" "NOK" "${msg_backup_failure}"
+
+				fi						
+			;;
+
+			restore)
+
+			if [[ ${file_exist} -eq 1 ]]; then
+
+				if [[ `metadata_is_restore_cmd "${job_id}"` -eq 1 ]]; then
+			
+					local restore_cmd=`metadata_get_restore_cmd "${job_id}"`
+					eval ${restore_cmd}
+
+					prt_func_res ${job_id_print} ${job_name} "RESTORE" "OK" "${msg_restore_success}"
+
+				else
+				
+					prt_func_res ${job_id_print} ${job_name} "RESTORE" "NOK" "${msg_restore_failure}"
+
+				fi
+
+			else
+
+				prt_func_res ${job_id_print} ${job_name} "RESTORE" "NOK" "${msg_restore_failure}"
+
+			fi		
+		;;
+
+			update)
+	
+			if [[ ${file_exist} -eq 1 ]]; then
+
+				if [[ `file_owner_set "${owner_wanted}" "${file_name}"` -eq 1 ]]; then
+
+					prt_func_res ${job_id_print} ${job_name} "UPDATE" "OK" "${msg_update_success}"
+
+				else
+				
+					prt_func_res ${job_id_print} ${job_name} "UPDATE" "NOK" "${msg_update_failure}"
+
+				fi
+
+			else
+
+					prt_func_res ${job_id_print} ${job_name} "UPDATE" "NOK" "${msg_update_failure}"
+				
+			fi
+		
+			;;
+
+			*)
+				exit 1
+			;;
+
+		esac
+}
+

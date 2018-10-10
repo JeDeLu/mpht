@@ -1,0 +1,2 @@
+Match Group PontisSFTP
+  ChrootDirectory /sftp/%u

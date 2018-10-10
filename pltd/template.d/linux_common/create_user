@@ -1,0 +1,112 @@
+#!/bin/bash
+#
+# NAME="create_user"
+# ARG_NUM="3"
+# ARG#1="user name"
+# ARG#2="user id"
+# ARG#3="user group id"
+# DESC="create a linux user"
+#
+
+source modules.d/user_module.sh
+
+function create_user {
+
+	local job_name="$2"
+	local job_id="$3"
+	local username="$4"
+	local uid="$5"
+	local gid="$6"
+	local job_id_print=`if [[ ${job_id} -lt 10 ]]; then echo "0${job_id}" ; else echo ${job_id} ; fi`
+	local msg_test_success="user ${user_name} exists and uid ${uid} set in /etc/passwd"
+	local msg_test_failure="user ${user_name} missing or wrong uid or wrong gid set in /etc/passwd"
+  local msg_backup_success="backup user ${user_name} successfull"
+	local msg_backup_failure="backup user ${user_name} failed"
+	local msg_restore_success="restore user ${user_name} successfull"
+	local msg_restore_failure="restore user ${user_name} failed"
+	local msg_update_success="update user ${user_name} successfull"
+	local msg_update_failure="update user ${user_name} failed"
+	
+	case $1 in
+		test)
+
+			if [[ `user_exist ${username}` -eq 1 ]]; then
+
+				# scemario where the uid is defined and the existing user has a matching uid set
+				if [[ "${uid}" != '' ]] && [[ `user_is_uid ${username} ${uid}` -eq 1 ]] && [[ "${gid}" != '' ]] && [[ `user_is_gid "${username}" "${gid}"` -eq 1 ]] ; then
+
+					prt_func_res ${job_id_print} ${job_name} "TEST" "OK" "${msg_test_success}"
+
+				# scenario where the uid is defined and the existing user does nt have a matching uid set
+				elif [[ "${uid}" != '' ]] && [[ `user_is_uid ${username} ${uid}` -eq 1 ]] && [[ "${gid}" == '' ]];  then
+					
+					prt_func_res ${job_id_print} ${job_name} "TEST" "OK" "${msg_test_success}"
+				
+				elif [[ "${uid}" == '' ]] && [[ "${gid}" != '' ]] &&  [[ `user_id_gid "${username}" "${gid}"` -eq 1 ]] ; then
+
+					prt_func_res ${job_id_print} ${job_name} "TEST" "OK" "${msg_test_success}"
+
+				# scenarion where the uid is not specified then uid can be anyone
+				elif [[ "${uid}" == '' ]] && [[ "${gid}" == '' ]]; then
+
+					prt_func_res ${job_id_print} ${job_name} "TEST" "OK" "${msg_test_success}"
+
+				fi
+
+			else
+				
+				prt_func_res ${job_id_print} ${job_name} "TEST" "NOK" "${msg_test_failure}"
+
+			fi
+		;;
+
+		backup)
+			
+			local cmd_line="userdel ${username} &>/dev/null"			
+			if [[ `metadata_write_restore_cmd "${job_id}" "${cmd_line}"` -eq 1 ]]; then
+		
+				prt_func_res ${job_id_print} ${job_name} "BACKUP" "OK" "${msg_backup_success}"
+
+			else
+				
+				prt_func_res ${job_id_print} ${job_name} "BACKUP" "NOK" "${msg_backup_failure}"
+
+			fi
+		;;
+
+		restore)
+
+			if [[ `metadata_is_restore_cmd "${job_id}"` -eq 1 ]]; then
+			
+				local restore_cmd=`metadata_get_restore_cmd "${job_id}"`
+				eval ${restore_cmd}
+
+				prt_func_res ${job_id_print} ${job_name} "RESTORE" "OK" "${msg_restore_success}"
+
+			else
+				
+				prt_func_res ${job_id_print} ${job_name} "RESTORE" "NOK" "${msg_restore_failure}"
+
+			fi
+		;;
+
+		update)
+ 
+			if [[ `user_create "${username}" "${uid}" "${gid}"` -eq 1 ]]; then
+
+				prt_func_res ${job_id_print} ${job_name} "UPDATE" "OK" "${msg_update_success}"
+
+			else
+				
+				prt_func_res ${job_id_print} ${job_name} "UPDATE" "NOK" "${msg_update_failure}"
+
+			fi
+		;;
+
+		*)
+			exit 1
+		;;
+
+	esac
+
+}

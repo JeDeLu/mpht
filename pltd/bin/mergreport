@@ -1,0 +1,312 @@
+#!/bin/bash
+
+report_dir="$1"
+output="./merged_file"
+>"${output}"
+
+function get_host_list {
+	
+	# return the list of the host from report csv
+	echo `awk -F\, '{print $1}' "${report_dir}/"* | grep -v "hostname" | uniq`
+ 
+}
+
+function get_errata_list {
+
+	# return the list of errata known in the report
+	echo `egrep -o "RHSA\-[0-9]{1,4}:[0-9]{1,4}" "${report_dir}/"* | awk -F\: '{print $2":"$3}' | sort -n | uniq`
+
+}
+
+function get_package_per_errata {
+
+	# assign the errata name from which to retrieve the package name
+	local errata_name="$1"
+
+	# return the list of package per errata
+	echo `egrep "${errata_name}" "${report_dir}/"* | egrep -o "${errata_name},[0-9a-zA-Z\_\.\-]*.(x86_64|noarch|i686)" | sort -n | uniq | awk -F\, '{print $2}'`
+
+}
+
+function get_package_status_per_rpm {
+
+	# assign the host name for which to retrieve the status
+	local host_name="$1"
+
+	# assign the errata name
+	local errata_name="$2"
+
+	# assign the package name for which to retrieve the status
+	local pkg_name="$3"
+
+	# identify the file name where the host name is located
+	filename=`ls -ltr \`grep -li "${host_name}" "${report_dir}/"*\` | tail -1 | awk '{print $9}'`
+	filename=`basename "${filename}"`
+
+	echo `egrep "${errata_name},${pkg_name}" "${report_dir}/${filename}" | tail -1 | egrep -o "[a-zA-Z\ \_\-]{1,}$"`
+
+}
+
+
+function get_cpu_num_per_host {
+
+	# assign the hostname for which to get the cpu value
+	local host_name="$1"
+
+	# catch the filename where the host appear
+	filename=`ls -ltr \`grep -li "${host_name}" "${report_dir}/"*\` | tail -1 | awk '{print $9}'`
+	filename=`basename "${filename}"`
+
+	# return the number of cpu core for the host passed
+	echo `awk -F\, '{print $2}' "${report_dir}/${filename}" | grep -v "cpu_core_num" | uniq`
+
+
+}
+
+function get_cpu_model_per_host {
+
+	# assign the hostname for which to get the cpu model
+	local host_name="$1"
+
+	# catch the filename where the host appear
+	filename=`ls -ltr \`grep -li "${host_name}" "${report_dir}/"*\` | tail -1 | awk '{print $9}'`
+	filename=`basename "${filename}"`
+
+	# return the number of cpu model for the host passed
+	echo `awk -F\, '{print $3}' "${report_dir}/${filename}" | grep -v "cpu_model_name" | uniq`
+
+
+}
+
+function get_total_memory_per_host {
+
+	# assign the hostname for which to get the total memory size
+	local host_name="$1"
+
+	# catch the filename where the host appear
+	filename=`ls -ltr \`grep -li "${host_name}" "${report_dir}/"*\` | tail -1 | awk '{print $9}'`
+	filename=`basename "${filename}"`
+
+	# return the total memory size for the host passed
+	echo `awk -F\, '{print $4}' "${report_dir}/${filename}" | grep -v "total_memory" | uniq`
+
+}
+
+function get_uptime_per_host {
+
+	# assign the hostname for which to get the uptime
+	local host_name="$1"
+
+	# catch the filename where the host appear
+	filename=`ls -ltr \`grep -li "${host_name}" "${report_dir}/"*\` | tail -1 | awk '{print $9}'`
+	filename=`basename "${filename}"`
+
+	# return the uptime for the host passed
+	echo `awk -F\, '{print $5}' "${report_dir}/${filename}" | grep -v "uptime" | tail -1`
+
+}
+
+function get_ip_per_host {
+
+	# assign the hostname for which to get the uptime
+	local host_name="$1"
+	local interface_num="$2"
+
+	# catch the filename where the host appear
+	filename=`ls -ltr \`grep -li "${host_name}" "${report_dir}/"*\` | tail -1 | awk '{print $9}'`
+	filename=`basename "${filename}"`
+
+	if [[ "${interface_num}" == "1" ]]; then
+
+		# return the ip addr 1 for the host passed
+		echo `awk -F\, '{print $6}' "${report_dir}/${filename}" | grep -v "ip" | uniq`
+
+	elif [[ "${interface_num}" == "2" ]]; then
+
+		# return the ip addr 2 for the host passed
+		echo `awk -F\, '{print $8}' "${report_dir}/${filename}" | grep -v "ip" | uniq`
+
+	elif [[ "${interface_num}" == "3" ]]; then
+
+		# return the ip addr 3 for the host passed
+		echo `awk -F\, '{print $10}' "${report_dir}/${filename}" | grep -v "ip" | uniq`
+
+	elif [[ "${interface_num}" == "4" ]]; then
+
+		# return the ip addr 1 for the host passed
+		echo `awk -F\, '{print $12}' "${report_dir}/${filename}" | grep -v "ip" | uniq`
+
+	elif [[ "${interface_num}" == "5" ]]; then
+		
+		# return the ip addr 1 for the host passed
+		echo `awk -F\, '{print $14}' "${report_dir}/${filename}" | grep -v "ip" | uniq`
+
+	elif [[ "${interface_num}" == "6" ]]; then
+
+	# return the ip addr 1 for the host passed
+		echo `awk -F\, '{print $16}' "${report_dir}/${filename}" | grep -v "ip" | uniq`
+
+	fi
+
+}
+
+function get_net_per_host {
+
+	# assign the hostname for which to get the uptime
+	local host_name="$1"
+	local interface_num="$2"
+
+	# catch the filename where the host appear
+	filename=`ls -ltr \`grep -li "${host_name}" "${report_dir}/"*\` | tail -1 | awk '{print $9}'`
+	filename=`basename "${filename}"`
+
+	if [[ "${interface_num}" == "1" ]]; then
+
+		# return the ip addr 1 for the host passed
+		echo `awk -F\, '{print $7}' "${report_dir}/${filename}" | grep -v "net" | uniq`
+
+	elif [[ "${interface_num}" == "2" ]]; then
+
+		# return the ip addr 2 for the host passed
+		echo `awk -F\, '{print $9}' "${report_dir}/${filename}" | grep -v "net" | uniq`
+
+	elif [[ "${interface_num}" == "3" ]]; then
+
+		# return the ip addr 3 for the host passed
+		echo `awk -F\, '{print $11}' "${report_dir}/${filename}" | grep -v "net" | uniq`
+
+	elif [[ "${interface_num}" == "4" ]]; then
+
+		# return the ip addr 1 for the host passed
+		echo `awk -F\, '{print $13}' "${report_dir}/${filename}" | grep -v "net" | uniq`
+
+	elif [[ "${interface_num}" == "5" ]]; then
+		
+		# return the ip addr 1 for the host passed
+		echo `awk -F\, '{print $15}' "${report_dir}/${filename}" | grep -v "net" | uniq`
+
+	elif [[ "${interface_num}" == "6" ]]; then
+
+	# return the ip addr 1 for the host passed
+		echo `awk -F\, '{print $17}' "${report_dir}/${filename}" | grep -v "net" | uniq`
+
+	fi
+
+}
+
+
+host_line=',,'
+cpu_num_line=',cpu_num,'
+cpu_model_line=',cpu_model,'
+tt_mem_line=',tt_memory,'
+uptime_line=',uptime,'
+ip_1_line=',ip_1,'
+netm_1_line=',netm_1,'
+ip_2_line=',ip_2,'
+netm_2_line=',netm_2,'
+ip_3_line=',ip_3,'
+netm_3_line=',netm_3,'
+ip_4_line=',ip_4,'
+netm_4_line=',netm_4,'
+ip_5_line=',ip_5,'
+netm_5_line=',netm_5,'
+ip_6_line=',ip_6,'
+netm_6_line=',netm_6,'
+
+for HOST in `get_host_list`; do
+
+	host_line="${host_line}${HOST},"
+
+	cpu_num=`get_cpu_num_per_host "${HOST}"`
+	cpu_num_line="${cpu_num_line}${cpu_num},"
+
+	cpu_model=`get_cpu_model_per_host "${HOST}"`
+	cpu_model_line="${cpu_model_line}${cpu_model},"
+
+	tt_memory=`get_total_memory_per_host "${HOST}"`
+	tt_mem_line="${tt_mem_line}${tt_memory},"
+
+	uptime=`get_uptime_per_host "${HOST}"`
+	uptime_line="${uptime_line}${uptime},"
+
+	ip_1=`get_ip_per_host "${HOST}" 1`
+	ip_1_line="${ip_1_line}${ip_1},"
+
+	netm_1=`get_net_per_host "${HOST}" 1`
+	netm_1_line="${netm_1_line}${netm_1},"
+
+	ip_2=`get_ip_per_host "${HOST}" 2`
+	ip_2_line="${ip_2_line}${ip_2},"
+	
+	netm_2=`get_net_per_host "${HOST}" 2`
+	netm_2_line="${netm_2_line}${netm_2},"
+
+	ip_3=`get_ip_per_host "${HOST}" 3`
+	ip_3_line="${ip_3_line}${ip_3},"
+
+	netm_3=`get_net_per_host "${HOST}" 3`
+	netm_3_line="${netm_3_line}${netm_3},"
+	
+	ip_4=`get_ip_per_host "${HOST}" 4`
+	ip_4_line="${ip_4_line}${ip_4},"
+
+	netm_4=`get_net_per_host "${HOST}" 4`
+	netm_4_line="${netm_4_line}${netm_4},"
+
+	ip_5=`get_ip_per_host "${HOST}" 5`
+	ip_5_line="${ip_5_line}${ip_5},"
+
+	netm_5=`get_net_per_host "${HOST}" 5`
+	netm_5_line="${netm_5_line}${netm_5},"
+
+	ip_6=`get_ip_per_host "${HOST}" 6`
+	ip_6_line="${ip_6_line}${ip_6},"
+
+	netm_6=`get_net_per_host "${HOST}" 6`
+	netm_6_line="${netm_6_line}${netm_6},"
+
+done
+
+echo "${host_line}" >> "${output}"
+echo "${cpu_num_line}" >> "${output}"
+echo "${tt_mem_line}" >> "${output}"
+echo "${uptime_line}" >> "${output}"
+echo "${ip_1_line}" >> "${output}"
+echo "${netm_1_line}" >> "${output}"
+echo "${ip_2_line}" >> "${output}"
+echo "${netm_2_line}" >> "${output}"
+echo "${ip_3_line}" >> "${output}"
+echo "${netm_3_line}" >> "${output}"
+echo "${ip_4_line}" >> "${output}"
+echo "${netm_4_line}" >> "{output}"
+echo "${ip_5_line}" >> "${output}"
+echo "${netm_5_line}" >> "${output}"
+echo "${ip_6_line}" >> "${output}"
+echo "${netm_6_line}" >> "${output}"
+
+for ERRATA in `get_errata_list`; do
+
+	pkg_line="${ERRATA},"
+	echo -n "[INFO] MERGING ERRATA: ${ERRATA} ... "
+
+	for RPM in `get_package_per_errata "${ERRATA}"`; do
+
+		pkg_line="${pkg_line}${RPM},"
+
+		for HOST in `get_host_list`; do
+
+			RPM_STATUS=`get_package_status_per_rpm "${HOST}" "${ERRATA}" "${RPM}"`
+
+			pkg_line="${pkg_line}${RPM_STATUS},"
+
+		done
+
+		echo "${pkg_line}" >> "${output}"
+		pkg_line="${ERRATA},"
+		
+	done
+
+	pkg_line="${ERRATA},"
+	echo "  [OK]"
+
+done

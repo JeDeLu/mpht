@@ -1,0 +1,34 @@
+#!/bin/bash
+
+exec_path=`dirname $0`
+package_name=$1
+
+global_app_path=`cd ${exec_path} ; grep 'app_root_path' ../../settings.json | awk -F\" '{print $4}'`
+global_app_pkg_path="${global_app_path}/${package_name}"
+global_app_active_path="${global_app_path}/latest"
+
+if [[ -d "${global_app_pkg_path}" ]]; then
+
+	#
+	# import module here
+	#
+	source ${global_app_active_path}/modules.d/file_module.sh
+
+	if [[ -L "${global_app_active_path}" ]] ; then
+
+		file_delete "${global_app_active_path}" &>/dev/null
+
+	fi
+
+	ln -s ${global_app_pkg_path} ${global_app_active_path}
+
+	if [[ $? -eq 0 ]]; then
+
+		echo 1 
+
+	else
+
+		echo 0
+
+	fi
+fi

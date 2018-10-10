@@ -1,0 +1,180 @@
+backup.system.hostname=suntos6
+backup.profile.name=pontis_rhel6
+backup.profile.cksum=3314601916
+backup.profile.line.0=[X] jobname=create_group_mapr,template=linux_common/create_group|mapr|1000
+backup.profile.line.1=[X] jobname=create_user_mapr,template=linux_common/create_user|mapr|1000|1000
+backup.profile.line.2=[X] jobname=create_user_pontis,template=linux_common/create_user|pontis|10025|1000
+backup.profile.line.3=[X] jobname=create_user_PontisSFTP,template=linux_common/create_user|PontisSFTP||
+backup.profile.line.4=[X] jobname=delete_user_lp,template=linux_common/delete_user|lp
+backup.profile.line.5=[X] jobname=delete_group_lp,template=linux_common/delete_group|lp
+backup.profile.line.6=[X] jobname=delete_user_uucp,template=linux_common/delete_user|uucp
+backup.profile.line.7=[X] jobname=delete_group_uucp,template=linux_common/delete_group|uucp
+backup.profile.line.8=[X] jobname=delete_user_games,template=linux_common/delete_user|games
+backup.profile.line.9=[X] jobname=delete_group_games,template=linux_common/delete_group|games
+backup.profile.line.10=[X] jobname=delete_user_gopher,template=linux_common/delete_user|gopher
+backup.profile.line.11=[X] jobname=delete_group_gopher,template=linux_common/delete_group|gopher
+backup.profile.line.12=[X] jobname=delete_user_news,template=linux_common/delete_user|news
+backup.profile.line.13=[X] jobname=delete_user_mailnull,template=linux_common/delete_user|mailnull
+backup.profile.line.14=[X] jobname=delete_user_adm,template=linux_common/delete_user|adm
+backup.profile.line.15=[X] jobname=create_group_sftponly,template=linux_common/create_group|sftponly
+backup.profile.line.16=[X] jobname=delete_group_adm,template=linux_common/delete_group|adm
+backup.profile.line.17=[X] jobname=delete_group_dip,template=linux_common/delete_group|dip
+backup.profile.line.18=[X] jobname=add_PontisSFTP_into_sftponly,template=linux_common/add_user_to_group|PontisSFTP|sftponly
+backup.profile.line.19=[X] jobname=set_shell_user_sync,template=linux_common/set_user_shell|sync|/sbin/nologin
+backup.profile.line.20=[X] jobname=set_shell_user_mail,template=linux_common/set_user_shell|mail|/sbin/nologin
+backup.profile.line.21=[X] jobname=lock_password_user_sync,template=linux_common/lock_user_password|sync
+backup.profile.line.22=[X] jobname=lock_password_user_mail,template=linux_common/lock_user_password|mail
+backup.profile.line.23=[X] jobname=create_file_sftp_config,template=linux_common/create_file|/etc/ssh/sftp_config
+backup.profile.line.24=[X] jobname=create_dir_sftp,template=linux_common/create_dir|/var/sftp
+backup.profile.line.25=[X] jobname=create_dir_sftp_uploads,template=linux_common/create_dir|/var/sftp/uploads
+backup.profile.line.26=[X] jobname=set_dir_sftp_owner,template=linux_common/set_dir_owner|/var/sftp|root
+backup.profile.line.27=[X] jobname=set_dir_sftp_group,template=linux_common/set_dir_group|/var/sftp|root
+backup.profile.line.28=[X] jobname=set_dir_sftp_perm,template=linux_common/set_dir_perm|/var/sftp|755
+backup.profile.line.29=[X] jobname=set_dir_uploads_owner,template=linux_common/set_dir_owner|/var/sftp/uploads|PontisSFTP
+backup.profile.line.30=[X] jobname=set_dir_uploads_group,template=linux_common/set_dir_group|/var/sftp/uploads|PontisSFTP
+backup.profile.line.31=[X] jobname=set_file_securetty_owner,template=linux_common/set_file_owner|/etc/securetty|root
+backup.profile.line.32=[X] jobname=set_file_securetty_group,template=linux_common/set_file_group|/etc/securetty|root
+backup.profile.line.33=[X] jobname=set_dir_tmp_perm,template=linux_common/set_dir_perm|/tmp|1777
+backup.profile.line.34=[X] jobname=set_dir_var_tmp_perm,template=linux_common/set_dir_perm|/var/tmp|1777
+backup.profile.line.35=[X] jobname=set_file_wtmp_owner,template=linux_common/set_file_owner|/var/log/wtmp|root
+backup.profile.line.36=[X] jobname=set_file_wtmp_group,template=linux_common/set_file_group|/var/log/wtmp|root
+backup.profile.line.37=[X] jobname=set_file_wtmp_perm,template=linux_common/set_file_perm|/var/log/wtmp|600
+backup.profile.line.38=[X] jobname=set_file_grub_conf_perm,template=linux_common/set_file_perm|/etc/grub.conf|600
+backup.profile.line.39=[X] jobname=set_banner_issue_content,template=pontis_custom/update_banner_content|/etc/issue|./misc/banner
+backup.profile.line.40=[X] jobname=set_banner_issue_net_content,template=pontis_custom/update_banner_content|/etc/issue.net|./misc/banner
+backup.profile.line.41=[X] jobname=set_banner_motd_content,template=pontis_custom/update_banner_content|/etc/motd|./misc/banner
+backup.profile.line.42=[X] jobname=set_root_umask_0027,template=pontis_custom/update_umask_bashrc
+backup.profile.line.43=[X] jobname=set_user_shell_timeout,template=linux_common/set_user_shell_timeout|900
+backup.profile.line.44=[X] jobname=set_ssh_loglevel,template=pontis_custom/set_ssh_loglevel
+backup.profile.line.45=[X] jobname=set_ssh_protocol,template=pontis_custom/set_ssh_protocol
+backup.profile.line.46=[X] jobname=set_ssh_permit_root_login,template=pontis_custom/set_ssh_permit_root_login
+backup.profile.line.47=[X] jobname=set_ssh_max_auth_tries,template=pontis_custom/set_ssh_max_auth_tries
+backup.profile.line.48=[X] jobname=set_ssh_empty_password,template=pontis_custom/set_ssh_empty_password
+backup.profile.line.49=[X] jobname=set_ssh_alive_count,template=pontis_custom/set_ssh_alive_count
+backup.profile.line.50=[X] jobname=set_ssh_alive_interval,template=pontis_custom/set_ssh_alive_interval
+backup.profile.line.51=[X] jobname=set_ssh_port,template=pontis_custom/set_ssh_port
+backup.profile.line.52=[X] jobname=set_ssh_ciphers,template=pontis_custom/set_ssh_ciphers
+backup.profile.line.53=[X] jobname=set_ssh_rhosts,template=pontis_custom/set_ssh_rhosts
+backup.profile.line.54=[X] jobname=set_ssh_host_based_auth,template=pontis_custom/set_ssh_host_based_auth
+backup.profile.line.55=[X] jobname=set_ssh_banner,template=pontis_custom/set_ssh_banner
+backup.profile.line.56=[X] jobname=set_ssh_permit_user_env,template=pontis_custom/set_ssh_permit_user_env
+backup.profile.line.57=[X] jobname=set_ssh_strict_mode,template=pontis_custom/set_ssh_strict_mode
+backup.profile.line.58=[X] jobname=set_ssh_privilege_separation,template=pontis_custom/set_ssh_privilege_separation
+backup.profile.line.59=[X] jobname=set_ssh_allow_users,template=pontis_custom/set_ssh_allow_users
+backup.profile.line.60=[X] jobname=disable_selinux,template=linux_common/disable_selinux
+backup.profile.line.61=[X] jobname=set_auth_passwd_history,template=pontis_custom/set_auth_passwd_history
+backup.profile.line.62=[X] jobname=set_passwd_min_days,template=pontis_custom/set_passwd_min_days
+backup.profile.line.63=[X] jobname=set_auth_enforce_root,template=pontis_rhel6/set_auth_enforce_root
+backup.profile.line.64=[X] jobname=set_auth_passwd_min_len,template=pontis_rhel6/set_auth_passwd_min_len
+backup.profile.line.65=[X] jobname=set_auth_passwd_min_class,template=pontis_rhel6/set_auth_passwd_min_class
+backup.profile.line.66=[X] jobname=set_ctrl_alt_delete_override,template=pontis_rhel6/set_ctrl_alt_delete_override
+backup.profile.line.67=[X] jobname=set_init_runlevel_3,template=pontis_rhel6/set_init_runlevel_3
+backup.profile.line.68=[X] jobname=set_sudo_syslog_auth,template=pontis_custom/set_sudo_syslog_auth
+backup.profile.line.69=[X] jobname=set_sudo_pontis,template=pontis_custom/set_sudo_pontis
+backup.profile.line.70=[X] jobname=set_sudo_mapr,template=pontis_custom/set_sudo_mapr
+backup.profile.line.71=[X] jobname=set_rsh_off_securetty,template=pontis_custom/set_rsh_off_securetty
+backup.profile.line.72=[X] jobname=set_pts_off_securetty,template=pontis_custom/set_pts_off_securetty
+backup.profile.line.73=[X] jobname=add_logrotate_cron,template=pontis_custom/add_logrotate_cron
+backup.profile.line.74=[X] jobname=add_logrotate_messages,template=pontis_custom/add_logrotate_messages
+backup.profile.line.75=[X] jobname=add_logrotate_secure,template=pontis_custom/add_logrotate_secure
+backup.profile.line.76=[X] jobname=add_logrotate_spooler,template=pontis_custom/add_logrotate_spooler
+backup.profile.line.77=[X] jobname=add_logrotate_maillog,template=pontis_custom/add_logrotate_maillog
+backup.profile.line.78=[X] jobname=add_logrotate_bootlog,template=pontis_custom/add_logrotate_bootlog
+backup.profile.line.79=[X] jobname=disable_service_gpm,template=pontis_rhel6/set_service6_disable|gpm
+backup.profile.line.80=[X] jobname=disable_service_kudzu,template=pontis_rhel6/set_service6_disable|kudzu
+backup.profile.line.81=[X] jobname=disable_service_apmd,template=pontis_rhel6/set_service6_disable|apmd
+backup.profile.line.82=[X] jobname=disable_service_rwhod,template=pontis_rhel6/set_service6_disable|rwhod
+backup.profile.line.83=[X] jobname=disable_service_isdn,template=pontis_rhel6/set_service6_disable|isdn
+backup.profile.line.84=[X] jobname=disable_service_rstatd,template=pontis_rhel6/set_service6_disable|rstatd
+backup.profile.line.85=[X] jobname=disable_service_rusersd,template=pontis_rhel6/set_service6_disable|rusersd
+backup.profile.line.86=[X] jobname=disable_service_vncserver,template=pontis_rhel6/set_service6_disable|vncserver
+backup.profile.line.87=[X] jobname=disable_service_arpwatch,template=pontis_rhel6/set_service6_disable|arpwatch
+backup.profile.line.88=[X] jobname=disable_service_vsftpd,template=pontis_rhel6/set_service6_disable|vsftpd
+backup.profile.line.89=[X] jobname=disable_service_xfs,template=pontis_rhel6/set_service6_disable|xfs
+backup.profile.line.90=[X] jobname=disable_service_nfslock,template=pontis_rhel6/set_service6_disable|nfslock
+backup.profile.line.91=[X] jobname=disable_service_squid,template=pontis_rhel6/set_service6_disable|squid
+backup.profile.line.92=[X] jobname=disable_service_atd,template=pontis_rhel6/set_service6_disable|atd
+backup.profile.line.93=[X] jobname=disable_service_rhnsd,template=pontis_rhel6/set_service6_disable|rhnsd
+backup.profile.line.94=[X] jobname=disable_service_telnet,template=pontis_rhel6/set_service6_disable|telnet
+backup.profile.line.95=[X] jobname=disable_service_amanda,template=pontis_rhel6/set_service6_disable|amanda
+backup.profile.line.96=[X] jobname=disable_service_daytime_dgram,template=pontis_rhel6/set_service6_disable|daytime-dgram
+backup.profile.line.97=[X] jobname=disable_service_cvs,template=pontis_rhel6/set_service6_disable|cvs
+backup.profile.line.98=[X] jobname=disable_service_krb5_telnet,template=pontis_rhel6/set_service6_disable|krb5-telnet
+backup.profile.line.99=[X] jobname=disable_service_rexec,template=pontis_rhel6/set_service6_disable|rexec
+backup.profile.line.100=[X] jobname=disable_service_tftp,template=pontis_rhel6/set_service6_disable|tftp
+backup.profile.line.101=[X] jobname=disable_service_amandaidx,template=pontis_rhel6/set_service6_disable|amandaidx
+backup.profile.line.102=[X] jobname=disable_service_daytime_stream,template=pontis_rhel6/set_service6_disable|daytime-stream
+backup.profile.line.103=[X] jobname=disable_service_gssftp,template=pontis_rhel6/set_service6_disable|gssftp
+backup.profile.line.104=[X] jobname=disable_service_rlogin,template=pontis_rhel6/set_service6_disable|rlogin
+backup.profile.line.105=[X] jobname=disable_service_talk,template=pontis_rhel6/set_service6_disable|talk
+backup.profile.line.106=[X] jobname=disable_service_time_dgram,template=pontis_rhel6/set_service6_disable|time-dgram
+backup.profile.line.107=[X] jobname=disable_service_ntalk,template=pontis_rhel6/set_service6_disable|ntalk
+backup.profile.line.108=[X] jobname=disable_service_amidxtape,template=pontis_rhel6/set_service6_disable|amidxtape
+backup.profile.line.109=[X] jobname=disable_service_rsh,template=pontis_rhel6/set_service6_disable|rsh
+backup.profile.line.110=[X] jobname=disable_service_eklogin,template=pontis_rhel6/set_service6_disable|eklogin
+backup.profile.line.111=[X] jobname=disable_service_auth,template=pontis_rhel6/set_service6_disable|auth
+backup.profile.line.112=[X] jobname=disable_service_echo-stream,template=pontis_rhel6/set_service6_disable|echo-stream
+backup.profile.line.113=[X] jobname=disable_service_ktalk,template=pontis_rhel6/set_service6_disable|ktalk
+backup.profile.line.114=[X] jobname=disable_service_discard-dgram,template=pontis_rhel6/set_service6_disable|discard-dgram
+backup.profile.line.115=[X] jobname=disable_service_klogin,template=pontis_rhel6/set_service6_disable|klogin
+backup.profile.line.116=[X] jobname=disable_service_time_stream,template=pontis_rhel6/set_service6_disable|time-stream
+backup.profile.line.117=[X] jobname=disable_service_discard_stream,template=pontis_rhel6/set_service6_disable|discard-stream
+backup.profile.line.118=[X] jobname=set_sftp_server_force_command,template=pontis_custom/set_sftp_server_force_command
+backup.profile.line.119=[X] jobname=set_sftp_server_allow_agent_forwarding,template=pontis_custom/set_sftp_server_allow_agent_forwarding
+backup.profile.line.120=[X] jobname=set_sftp_server_allow_tcp_forwarding,template=pontis_custom/set_sftp_server_allow_tcp_forwarding
+backup.profile.line.121=[X] jobname=set_sftp_server_password_auth,template=pontis_custom/set_sftp_server_password_auth
+backup.profile.line.122=[X] jobname=set_sftp_server_chal_response_auth,template=pontis_custom/set_sftp_server_chal_response_auth
+backup.profile.line.123=[X] jobname=set_sftp_server_loglevel,template=pontis_custom/set_sftp_server_loglevel
+backup.profile.line.124=[X] jobname=set_sftp_server_permit_tunnel,template=pontis_custom/set_sftp_server_permit_tunnel
+backup.profile.line.125=[X] jobname=set_sftp_subsystem_server,template=pontis_custom/set_sftp_subsystem_server
+backup.profile.line.126=[X] jobname=set_sftp_match_group,template=pontis_custom/set_sftp_match_group
+backup.profile.line.127=[X] jobname=set_sftp_server_chroot,template=pontis_custom/set_sftp_server_chroot
+backup.job.0.cmd=groupdel mapr &>/dev/null
+backup.job.1.cmd=userdel mapr &>/dev/null
+backup.job.2.cmd=userdel pontis &>/dev/null
+backup.job.3.cmd=userdel PontisSFTP &>/dev/null
+backup.job.4.cmd=groupadd lp &>/dev/null ; useradd -c "lp" -d /var/spool/lpd -m -s /sbin/nologin -u 4 -g lp lp &>/dev/null
+backup.job.6.cmd=groupadd uucp &>/dev/null ; useradd -c "uucp" -d /var/spool/uucp -m -s /sbin/nologin -u 10 -g uucp uucp &>/dev/null
+backup.job.8.cmd=groupadd games &>/dev/null ; useradd -c "games" -d /usr/games -m -s /sbin/nologin -u 12 -g games games &>/dev/null
+backup.job.10.cmd=groupadd gopher &>/dev/null ; useradd -c "gopher" -d /var/gopher -m -s /sbin/nologin -u 13 -g gopher gopher &>/dev/null
+backup.job.14.cmd=groupadd adm &>/dev/null ; useradd -c "adm" -d /var/adm -m -s /sbin/nologin -u 3 -g adm adm &>/dev/null
+backup.job.16.cmd=groupadd dip &>/dev/null
+backup.job.17.cmd=gpasswd -d PontisSFTP sftponly &>/dev/null
+backup.job.21.cmd=passwd -u mail &>/dev/null
+backup.job.23.cmd=rm -fr /var/sftp &>/dev/null
+backup.job.24.cmd=rm -fr /var/sftp/uploads &>/dev/null
+backup.job.28.cmd=chown root /var/sftp/uploads
+backup.job.29.cmd=chown :root /var/sftp/uploads
+backup.job.35.cmd=chown :utmp /var/log/wtmp
+backup.job.36.cmd=chmod 664 /var/log/wtmp &>/dev/null
+backup.job.38.cmd=echo "" >"/etc/issue" 2>/dev/null ; sed -i 's/%/\n/g' "/etc/issue" ; sed -i '$d' "/etc/issue"
+backup.job.39.cmd=echo "" >"/etc/issue.net" 2>/dev/null ; sed -i 's/%/\n/g' "/etc/issue.net" ; sed -i '$d' "/etc/issue.net"
+backup.job.40.cmd=echo "" >"/etc/motd" 2>/dev/null ; sed -i 's/%/\n/g' "/etc/motd" ; sed -i '$d' "/etc/motd"
+backup.job.41.cmd=sed -i '/umask\ 0027/d' /etc/bashrc 2>/dev/null >/dev/null ; umask 0022 ;
+backup.job.42.cmd=sed -i '/export\ TMOUT=900/d' /etc/bashrc &>/dev/null
+backup.job.43.cmd=sed -i 's/LogLevel INFO/LogLevel DEBUG3/' /etc/ssh/sshd_config 2>/dev/null >/dev/null
+backup.job.45.cmd=sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config &>/dev/null
+backup.job.46.cmd=sed -i 's/MaxAuthTries 4/#MaxAuthTries 3/' /etc/ssh/sshd_config &>/dev/null
+backup.job.47.cmd=sed -i 's/PermitEmptyPasswords no/#PermitEmptyPasswords no/' /etc/ssh/sshd_config &>/dev/null
+backup.job.48.cmd=sed -i 's/ClientAliveCountMax 0/#ClientAliveCountMax 0/' /etc/ssh/sshd_config &>/dev/null
+backup.job.49.cmd=sed -i 's/ClientAliveInterval 300/#ClientAliveInterval 20/' /etc/ssh/sshd_config &>/dev/null
+backup.job.51.cmd=sed -i '/Ciphers aes128-ctr,aes192-ctr,aes256-ctr/d' /etc/ssh/sshd_config &>/dev/null
+backup.job.52.cmd=sed -i 's/IgnoreRhosts yes/#IgnoreRhosts yes/' /etc/ssh/sshd_config &>/dev/null
+backup.job.53.cmd=sed -i '/HostBasedAuthentication no/d' /etc/ssh/sshd_config &>/dev/null
+backup.job.55.cmd=sed -i 's/PermitUserEnvironment no/#PermitUserEnvironment no/' /etc/ssh/sshd_config &>/dev/null
+backup.job.56.cmd=sed -i 's/StrictModes yes/#StrictModes yes/' /etc/ssh/sshd_config &>/dev/null
+backup.job.57.cmd=sed -i 's/UsePrivilegeSeparation yes/#UsePrivilegeSeparation yes/' /etc/ssh/sshd_config &>/dev/null
+backup.job.58.cmd=sed -i '/AllowUsers pontis mapr root/d' /etc/ssh/sshd_config &>/dev/null
+backup.job.60.cmd=sed -i 's/remember=10\ //' /etc/pam.d/system-auth &>/dev/null
+backup.job.61.cmd=sed -i 's/PASS_MIN_DAYS 7|PASS_MIN_DAYS	7/PASS_MIN_DAYS 0/' /etc/login.defs &>/dev/null
+backup.job.62.cmd=sed -i 's/enforce_for_root\ //' /etc/pam.d/system-auth &>/dev/null
+backup.job.63.cmd=sed -i 's/minlen=8\ //' /etc/pam.d/system-auth
+backup.job.64.cmd=sed -i 's/minclass=3\ //' /etc/pam.d/system-auth
+backup.job.68.cmd=sed -i '/%pontis ALL=(root) NOPASSWD:ALL /d' /etc/sudoers &>/dev/null
+backup.job.69.cmd=sed -i '/%mapr ALL=(root) NOPASSWD:ALL /d' /etc/sudoers 2>/dev/null >/dev/null
+backup.job.77.cmd=sed -i '\#/var/log/boot.log#d' /etc/logrotate.d/syslog &>/dev/null
+backup.job.89.cmd=chkconfig nfslock on &>/dev/null
+backup.job.117.cmd=sed -i '/  ForceCommand internal-sftp/d' /etc/ssh/sshd_config &>/dev/null
+backup.job.122.cmd=sed -i '/  LogLevel VERBOSE/d' /etc/ssh/sshd_config &>/dev/null
+backup.job.125.cmd=sed -i '/Match Group PontisSFTP/d' /etc/ssh/sshd_config &>/dev/null
+backup.job.126.cmd=sed -i '/  ChrootDirectory \/sftp\/%u/d' /etc/ssh/sshd_config &>/dev/null

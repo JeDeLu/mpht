@@ -1,0 +1,40 @@
+#!/bin/bash
+
+if [[ $1 != '' ]]; then
+
+	INPUT_FILE=$1
+
+	if [[ `egrep -c "[0-9]{1,4}\:[0-9]{1,4}" "${INPUT_FILE}"` -eq 1 ]]; then
+	
+		ERRATA=`egrep -o "[0-9]{1,4}\:[0-9]{1,4}" "${INPUT_FILE}"`
+
+
+			if [[ `egrep -o "[a-zA-Z0-9\.\_\-]{1,}.rpm" "${INPUT_FILE}" | wc -l` -gt 0 ]]; then
+
+				for RPM in `egrep -o "[a-zA-Z0-9\.\_\-]{1,}.rpm" "${INPUT_FILE}"`; do
+
+					echo "errata.RHSA-${ERRATA}.rpm=${RPM}"
+
+				done
+
+			else
+
+				echo "[ERROR] NO RPM FOUND"
+				exit 1
+
+			fi
+
+
+	else
+
+		echo "[ERROR] ERRATA IS NOT FOUND"
+		exit 1
+
+	fi
+
+else
+
+	echo "[ERROR] THERE IS NO INPUT FILE PASSED"
+	exit 1
+
+fi

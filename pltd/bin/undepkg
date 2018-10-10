@@ -1,0 +1,48 @@
+#!/bin/bash
+
+exec_path=`dirname $0`
+package_name=$1
+
+# define the root directory of the app
+global_app_path=`cd ${exec_path} ; grep 'app_root_path' ../../settings.json | awk -F\" '{print $4}'`
+
+# define the root directory of the app package
+global_app_pkg_path="${global_app_path}/package.d"
+
+# define the root directory of the current active app
+global_app_active_path="${global_app_path}/latest"
+
+# path of the current package deployed
+global_app_package_name="${global_app_path}/${package_name}"
+
+if [[ -d "${global_app_package_name}" ]]; then
+
+	#
+	# import module here
+	#
+	source ${global_app_active_path}/modules.d/file_module.sh
+
+	# identify the current active relative package path
+	global_active_pkg_name=`file_symlink_src_get "${global_app_active_path}"`
+	
+	# identify the current active package name
+	global_active_pkg=`basename "${global_active_pkg_name}"`
+
+	# define the current active obsolute package path
+	global_active_pkg_path="${global_app_path}/${global_active_pkg}"
+
+	if [[ "${global_active_pkg_path}" != "${global_app_package_name}" ]]; then
+
+		if [[ `file_delete "${global_app_package_name}"` -eq 1 ]]; then
+
+			echo 1 
+
+		else
+
+			echo 0
+
+		fi
+
+		cd - &>/dev/null
+	fi
+fi

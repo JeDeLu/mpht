@@ -1,0 +1,54 @@
+#!/bin/bash
+
+exec_path=`dirname $0`
+package_name=$1
+
+# define the app root
+global_app_path=`cd ${exec_path} ; grep 'app_root_path' ../../settings.json | awk -F\" '{print $4}'`
+
+# define the pointer to the current package
+global_app_active_path="${global_app_path}/latest" 
+
+# define the package directory
+global_pkg_path="${global_app_path}/package.d"
+
+# define the destination directory while copying existing package
+global_new_package="${global_app_path}/${package_name}"
+
+# define pkg destination while compressing
+global_package="${global_pkg_path}/${package_name}.pkg"
+
+if [[ ! -d "${global_new_package}" ]]; then
+
+	#
+	# import module here
+	#
+	source ${global_app_active_path}/modules.d/file_module.sh
+
+	global_current_package=`file_symlink_src_get "${global_app_active_path}"`
+	global_current_package_name=`basename "${global_current_package}"`
+	global_current_package_absolute_path="${global_app_path}/${global_current_package_name}"
+
+	cp -pr "${global_current_package_absolute_path}" "${global_new_package}"
+	rm -fr "${global_new_package}/logging/*"
+	rm -fr "${global_new_package}/backup/*"
+	rm -fr "${global_new_package}/package.d/*"
+	rm -fr "${global_new_package}/output/*"
+
+	cd "${global_app_path}"
+
+	tar cvfp "${global_package}" "./${package_name}" &>/dev/null
+
+	if [[ $? -eq 0 ]]; then
+
+		file_delete "${global_new_package}" &>/dev/null
+		echo 1 
+
+	else
+
+		echo 0
+
+	fi
+
+	cd - &>/dev/null
+fi

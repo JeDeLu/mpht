@@ -1,0 +1,91 @@
+#!/bin/bash
+#
+# NAME="add_user_to_group"
+# ARG_NUM="2"
+# ARG#1="the user name to change the configuration"
+# ARG#2="the group name where to add the user"
+# DESC="add an existing user into and existing group"
+# 
+
+source modules.d/user_module.sh
+
+function add_user_to_group {
+		
+	local job_name="$2"
+	local job_id="$3"
+	local user_name="$4"
+	local group_name="$5"
+	local job_id_print=`if [[ ${job_id} -lt 10 ]]; then echo "0${job_id}" ; else echo ${job_id} ; fi`
+	local msg_test_success="user ${user_name} is in group ${group_name}"
+	local msg_test_failure="user ${user_name} is not in group ${group_name}"
+  local msg_backup_success="user ${user_name} backup success"
+	local msg_backup_failure="user ${user_name} backup failed"
+	local msg_restore_success="restore user ${user_name} to group success"
+	local msg_restore_failure="restore user ${user_name} to group failed"
+	local msg_update_success="add user ${user_name} to group ${group_name} success"
+	local msg_update_failure="add user ${user_name} to group ${group_name} failed"
+
+
+	case $1 in
+		test)
+
+			if [[ `user_in_group ${user_name} "name" ${group_name}` -eq 1 ]]; then
+
+				prt_func_res ${job_id_print} ${job_name} "TEST" "OK" "${msg_test_success}"
+
+			else
+				
+				prt_func_res ${job_id_print} ${job_name} "TEST" "NOK" "${msg_test_failure}"
+
+			fi
+		;;
+
+		backup)
+
+			cmd_line="gpasswd -d ${user_name} ${group_name} &>/dev/null"
+			if [[ `metadata_write_restore_cmd "${job_id}" "${cmd_line}"` -eq 1 ]]; then
+
+				prt_func_res ${job_id_print} ${job_name} "BACKUP" "OK" "${msg_backup_success}"
+
+			else
+				
+				prt_func_res ${job_id_print} ${job_name} "BACKUP" "NOK" "${msg_backup_failure}"
+
+			fi			
+		;;
+
+		restore)
+
+			if [[ `metadata_is_restore_cmd "${job_id}"` -eq 1 ]]; then
+			
+				local restore_cmd=`metadata_get_restore_cmd "${job_id}"`
+				eval ${restore_cmd}
+
+				prt_func_res ${job_id_print} ${job_name} "RESTORE" "OK" "${msg_restore_success}"
+
+			else
+				
+				prt_func_res ${job_id_print} ${job_name} "RESTORE" "NOK" "${msg_restore_failure}"
+
+			fi
+		;;
+
+		update)
+				
+			if [[ `group_add_user "${group_name}" "${user_name}"` -eq 1 ]]; then
+
+				prt_func_res ${job_id_print} ${job_name} "UPDATE" "OK" "${msg_update_success}"
+
+			else
+				
+				prt_func_res ${job_id_print} ${job_name} "UPDATE" "NOK" "${msg_update_failure}"
+
+			fi
+		;;
+
+		*)
+		;;
+
+	esac
+
+}
