@@ -1,0 +1,40 @@
+#!/bin/bash
+
+patch_file="$1"
+patch_type="all"
+
+if [[ $1 != '' ]]; then
+
+	if [[ $2 != '' ]]; then
+
+		patch_type="$2"
+
+	fi
+
+	source ../modules.d/patch_manager_module.sh
+
+	for ERRATA in `patch_manager_get_errata_list "${patch_file}"`; do
+
+		if [[ "${patch_type}" == "all" ]] || [[ "${patch_type}" == "errata" ]]; then
+
+			echo " - ERRATA: ${ERRATA}"
+
+		fi
+
+		if [[ "${patch_type}" == "all" ]] || [[ "${patch_type}" == "patch" ]]; then
+
+			for RPM in `patch_manager_get_rpm_from_errata "${ERRATA}" "${patch_file}"`; do
+
+				echo "  -- ${RPM}"
+
+			done
+
+		fi
+
+	done
+
+else
+
+	echo "[ERROR] THERE IS NO PATCH FILE PASSED" 
+
+fi

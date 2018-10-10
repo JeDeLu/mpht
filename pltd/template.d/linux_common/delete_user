@@ -1,0 +1,104 @@
+#!/bin/bash
+#
+# NAME="delete_user"
+# ARG_NUM="1"
+# DESC="delete linux user"
+#
+
+source modules.d/user_module.sh
+
+function delete_user {
+
+	local job_name="$2"
+	local job_id="$3"
+  local user_name="$4"
+	local job_id_print=`if [[ ${job_id} -lt 10 ]]; then echo "0${job_id}" ; else echo "${job_id}" ; fi`
+	local msg_test_success="user $user_name correctly set"
+	local msg_test_failure="user $user_name not correctly set"
+  local msg_backup_success="backup user $user_name success"
+	local msg_backup_failure="backup user $user_name failed"
+	local msg_restore_success="restore user $user_name success"
+	local msg_restore_failure="restore user $user_name failed"
+	local msg_update_success="update user $user_name successfull"
+	local msg_update_failure="update user $user_name failed"
+	local user_exist=0
+	
+	if [[ `user_exist "${user_name}"` -eq  1 ]]; then
+
+		user_exist=1
+
+	fi
+
+	case $1 in
+		test)
+		
+			if [[ ${user_exist} -eq 0 ]]; then
+
+				prt_func_res ${job_id_print} ${job_name} "TEST" "OK" "${msg_test_success}"
+
+			else
+				
+				prt_func_res ${job_id_print} ${job_name} "TEST" "NOK" "${msg_test_failure}"
+
+			fi
+		;;
+
+		backup)
+
+			# is the user member of the group with same name as username 
+			if [[ `groups "${user_name}" | awk -F\: '{print $2}' | egrep -c ${user_name}` -gt 0 ]] && [[ `awk -F\: '$1 = /${user_name}/ {print $4}' "/etc/group" | egrep -c ${user_name}` -eq 0 ]] ; then 
+
+				cmd_line="groupadd ${user_name} &>/dev/null ; "`user_restore_cmd_get ${user_name}`
+								
+			else
+
+				cmd_line=`user_restore_cmd_get ${user_name}`
+
+			fi			
+
+			if [[ `metadata_write_restore_cmd "${job_id}" "${cmd_line}"` -eq 1 ]]; then
+
+				prt_func_res ${job_id_print} ${job_name} "BACKUP" "OK" "${msg_backup_success}"
+
+			else
+				
+				prt_func_res ${job_id_print} ${job_name} "BACKUP" "NOK" "${msg_backup_failure}"
+
+			fi
+		;;
+
+		restore)
+
+			if [[ `metadata_is_restore_cmd "${job_id}"` -eq 1 ]]; then
+			
+				local restore_cmd=`metadata_get_restore_cmd "${job_id}"`
+				eval ${restore_cmd}
+
+				prt_func_res ${job_id_print} ${job_name} "RESTORE" "OK" "${msg_restore_success}"
+
+			else
+				
+				prt_func_res ${job_id_print} ${job_name} "RESTORE" "NOK" "${msg_restore_failure}"
+			
+			fi		
+		;;
+
+		update)
+
+			if [[ `user_delete "${user_name}"` -eq 1 ]]; then
+
+				prt_func_res ${job_id_print} ${job_name} "UPDATE" "OK" "${msg_update_success}"
+
+			else
+				
+				prt_func_res ${job_id_print} ${job_name} "UPDATE" "NOK" "${msg_update_failure}"
+
+			fi 
+		;;
+
+		*)
+			exit 1
+		;;
+
+		esac
+}

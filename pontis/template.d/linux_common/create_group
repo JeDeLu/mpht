@@ -1,0 +1,105 @@
+#!/bin/bash
+#
+# NAME="create_group"
+# ARG_NUM="2"
+# ARG#1="group name"
+# ARG#2="group id"
+# DESC="create new group"
+
+source modules.d/group_module.sh
+
+function create_group {
+
+	local job_name="$2"
+	local job_id="$3"
+	local group_name="$4"
+	local gid="$5"
+	local job_id_print=`if [[ ${job_id} -lt 10 ]]; then echo "0${job_id}" ; else echo "${job_id}" ; fi`
+	local msg_test_success="group ${group_name} gid ${gid} exists in /etc/group"
+	local msg_test_failure="group ${group_name} gid ${gid} missing in /etc/group"
+  local msg_backup_success="group ${group_name} gid ${gid} backup successfull"
+	local msg_backup_failure="group ${group_name} gid ${gid} backup failed"
+	local msg_restore_success="group ${group_name} gid ${gid} restore successfull"
+	local msg_restore_failure="group ${group_name} gid ${gid} restore failed"
+	local msg_update_success="group ${group_name} gid ${gid} added successfully to /etc/group"
+	local msg_update_failure="group ${group_name} gid ${gid} failed to add to /etc/group"
+
+
+	case $1 in
+		test)
+
+			if [[ "${gid}" == '' ]]; then
+				
+				if [[ `group_exist "${group_name}"` -eq 1 ]]; then
+
+					prt_func_res ${job_id_print} ${job_name} "TEST" "OK" "${msg_test_success}"
+
+				else
+				
+					prt_func_res ${job_id_print} ${job_name} "TEST" "NOK" "${msg_test_failure}"
+
+				fi
+
+			else
+
+				if [[ `group_exist "${group_name}" "${gid}"` -eq 1 ]]; then
+
+					prt_func_res ${job_id_print} ${job_name} "TEST" "OK" "${msg_test_success}"
+
+				else
+				
+					prt_func_res ${job_id_print} ${job_name} "TEST" "NOK" "${msg_test_failure}"
+
+				fi
+
+			fi
+		;;
+
+		backup)
+			
+			cmd_line="groupdel ${group_name} &>/dev/null"
+			if [[ `metadata_write_restore_cmd "${job_id}" "${cmd_line}"` -eq 1 ]]; then
+				
+				prt_func_res ${job_id_print} ${job_name} "BACKUP" "OK" "${msg_backup_success}"
+
+			else
+				
+				prt_func_res ${job_id_print} ${job_name} "BACKUP" "NOK" "${msg_backup_failure}"
+
+			fi
+		;;
+
+		restore)
+
+			if [[ `metadata_is_restore_cmd "${job_id}"` -eq 1 ]]; then
+			
+				local restore_cmd=`metadata_get_restore_cmd "${job_id}"`
+				eval ${restore_cmd}
+
+				prt_func_res ${job_id_print} ${job_name} "RESTORE" "OK" "${msg_backup_success}"
+
+			else
+				
+				prt_func_res ${job_id_print} ${job_name} "RESTORE" "NOK" "${msg_backup_failure}"
+			fi
+		;;
+
+		update)
+
+			if [[ `group_create ${group_name} ${gid}` -eq 1 ]]; then
+
+				prt_func_res ${job_id_print} ${job_name} "UPDATE" "OK" "${msg_backup_success}"
+
+			else
+				
+				prt_func_res ${job_id_print} ${job_name} "UPDATE" "NOK" "${msg_backup_failure}"
+
+			fi
+		;;		
+
+		*)
+			exit 1
+		;;
+	esac
+
+}

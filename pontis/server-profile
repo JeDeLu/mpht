@@ -1,0 +1,4 @@
+# assign here a host by hostname to a profile as follow
+# <hostname>,<profile_name>
+suntos6,pontis_rhel6
+suntos7,pontis_rhel7

@@ -1,0 +1,32 @@
+#!/bin/bash
+
+exec_path=`dirname $0`
+package_name=$1
+
+# define the root directory of the app
+global_app_path=`cd ${exec_path} ; grep 'app_root_path' ../../settings.json | awk -F\" '{print $4}'`
+
+# define the directory for the package
+global_pkg_path="${global_app_path}/package.d"
+
+# define the name of the package in absolute path
+global_package="${global_pkg_path}/${package_name}.pkg"
+
+if [[ -f "${global_package}" ]]; then
+
+	cd "${global_app_path}"
+	tar xvfp "${global_package}" &>/dev/null
+
+	if [[ $? -eq 0 ]]; then
+
+		echo 1 
+
+	else
+
+		echo 0
+
+	fi
+
+	cd - &>/dev/null
+
+fi

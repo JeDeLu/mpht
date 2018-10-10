@@ -1,0 +1,128 @@
+#!/bin/bash
+
+
+VERSION="2.2"
+
+if [[ $1 != '' ]]; then
+
+	LOCAL_PATH="$1"
+
+else
+
+	LOCAL_PATH=`pwd`
+
+fi
+
+if [[ ! -f "${LOCAL_PATH}/MPHT.sh" ]] ; then
+
+	if [[ `find / -type f -name "MPHT.sh" 2>/dev/null | grep "${VERSION}" | wc -l` -eq 1 ]] ; then
+
+		echo "[INFO] SEARCHING FOR CORRECT PATH ..."
+
+		PATH_NAME=`find / -type f -name "MPHT.sh" 2>/dev/null | grep "${VERSION}"`
+
+		LOCAL_PATH=`dirname ${PATH_NAME}`
+
+	else
+
+		echo "[ERROR] PATH NOT FOUND - THE LOCATION OF MPHT.sh WAS NOT FOUND"
+		exit 1
+
+	fi
+
+fi
+
+echo "[INFO] PATH: ${LOCAL_PATH}"
+
+chown root:root "${LOCAL_PATH}/MPHT.sh"
+chown root:root "${LOCAL_PATH}/pre-processing.sh"
+chmod 750 "${LOCAL_PATH}/MPHT.sh"
+chmod 750 "${LOCAL_PATH}/pre-processing.sh"
+
+if [[ -d "${LOCAL_PATH}/bin" ]]; then
+
+	echo "[INFO] SET PERM : ${LOCAL_PATH}/bin"
+
+	chown -R root:root "${LOCAL_PATH}/bin"
+	chmod -R 750 "${LOCAL_PATH}/bin" 
+
+fi
+
+if [[ -d "${LOCAL_PATH}/modules.d" ]] ; then
+
+	echo "[INFO] SET PERM : ${LOCAL_PATH}/modules.d"
+
+	chown -R root:root "${LOCAL_PATH}/modules.d"
+	chmod -R 750 "${LOCAL_PATH}/modules.d"
+
+fi
+
+if [[ -d "${LOCAL_PATH}/patch.d" ]] ; then
+
+	echo "[INFO] SET PERM : ${LOCAL_PATH}/patch.d"
+
+	chown -R root:root "${LOCAL_PATH}/patch.d"
+	chmod 750 "${LOCAL_PATH}/patch.d"
+	chmod 600 "${LOCAL_PATH}/patch.d/"*
+
+fi
+
+if [[ -d "${LOCAL_PATH}/templates.d" ]] ; then
+
+	echo "[INFO] SET PERM : ${LOCAL_PATH}/templates.d"
+
+	chown -R root:root "${LOCAL_PATH}/templates.d"
+	chmod 750 "${LOCAL_PATH}/templates.d"
+	chmod 750 "${LOCAL_PATH}/templates.d/"*
+	chmod 600 "${LOCAL_PATH}/templates.d/"*/*
+
+fi
+
+if [[ -d "${LOCAL_PATH}/profile.d" ]] ; then
+
+	echo "[INFO] SET PERM : ${LOCAL_PATH}/profile.d"
+
+	chown -R root:root "${LOCAL_PATH}/profile.d"
+	chmod 750 "${LOCAL_PATH}/profile.d"
+	chmod 600 "${LOCAL_PATH}/profile.d/"*
+
+fi
+
+if [[ -d "${LOCAL_PATH}/tmp" ]] ; then
+
+	echo "[INFO] SET PERM : ${LOCAL_PATH}/tmp"
+
+	chown -R root:root "${LOCAL_PATH}/tmp"
+	chmod 1777 "${LOCAL_PATH}/tmp"
+
+fi
+
+if [[ -d "${LOCAL_PATH}/logging" ]] ; then
+
+	echo "[INFO] SET PERM : ${LOCAL_PATH}/logging"
+
+	chown -R root:root "${LOCAL_PATH}/logging"
+	chmod 750 "${LOCAL_PATH}/logging"
+	chmod 600 "${LOCAL_PATH}/logging/"*
+
+fi
+
+if [[ -d "${LOCAL_PATH}/backup/`hostname`" ]] ; then
+
+	echo "[INFO] SET PERM : ${LOCAL_PATH}/backup/`hostname`"
+
+	chown -R root:root "${LOCAL_PATH}/backup/`hostname`"
+	chmod -R 750 "${LOCAL_PATH}/backup/`hostname`/"
+	
+fi
+
+if [[ -d "${LOCAL_PATH}/output" ]] ; then
+
+	echo "[INFO] SET PERM : ${LOCAL_PATH}/output"
+
+	chown -R root:root "${LOCAL_PATH}/output" 
+	chmod 750 "${LOCAL_PATH}/output"
+	chmod 750 "${LOCAL_PATH}/output/`hostname`/"*
+
+fi
+

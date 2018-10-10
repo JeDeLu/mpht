@@ -1,0 +1,1 @@
+[X] jobname=create_dir_tmp_log,template=solaris10_common/create_dir|/tmp/log
